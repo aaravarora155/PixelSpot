@@ -63,7 +63,6 @@ footer{
 }
 
 footer>div>a{
-    position: relative;
-    text-align: center;
-    
+    align-self: center;
+    padding-left:60px;
 }
