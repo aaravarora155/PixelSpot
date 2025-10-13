@@ -108,6 +108,13 @@ h2 {
 .aboutme > div > ul > ul > img {
   width: 150px;
 }
+.spacer{
+    padding: 20px;
+}
+#bottom-bar{
+    padding-top: 30px;
+    text-align: center;
+}
 @media (max-width: 750px) {
   .featured-projects {
     font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
