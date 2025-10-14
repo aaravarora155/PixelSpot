@@ -10,7 +10,6 @@ Hello my name is Aarav, this github repository contains the source code for my w
 # Change Log
 9-7-2025: Website is Live  
 
-
 9-10-2025: Support Chat is Live
 
 
