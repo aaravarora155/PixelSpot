@@ -108,14 +108,58 @@ h2 {
 .aboutme > div > ul > ul > img {
   width: 150px;
 }
-.spacer{
-    padding: 20px;
+.spacer {
+  padding: 20px;
 }
-#bottom-bar{
-    padding-top: 30px;
+#bottom-bar {
+  position: fixed;
+  padding-top: 30px;
+  text-align: center;
+  bottom: 0px;
+  width: 100%;
+}
+.assignments-containers {
+  display: grid;
+  text-align: center;
+  justify-content: center;
+  grid-template-columns: 220px 220px 220px 220px 220px;
+  column-gap: 20px;
+  padding-left: 0px;
+  margin-left: 0px;
+}
+.assignments-tiles {
+  width: 220px;
+  margin: 20px;
+  height: 40px;
+  padding-top: 15px;
+
+  background-color: antiquewhite;
+  border-radius: 15px;
+}
+.assignments-tiles > a {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-weight: 80;
+  color: rgba(59, 2, 54, 0.557);
+}
+@media (max-width: 1250px) {
+  .assignments-containers {
+    display: grid;
     text-align: center;
+    justify-content: center;
+    grid-template-columns: 220px 220px;
+    column-gap: 20px;
+    padding-left: 0px;
+    margin-left: 0px;
+  }
 }
 @media (max-width: 750px) {
+  .top-bar {
+    height: 50px;
+    width: 105%;
+    background-color: #2857a8;
+    text-align: left;
+    padding-top: 15px;
+  }
   .featured-projects {
     font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
     display: flex;
@@ -126,6 +170,7 @@ h2 {
     text-align: center;
     align-items: center;
   }
+
   .aboutme {
     width: 420px;
     height: 700px;
@@ -140,7 +185,7 @@ h2 {
     width: 380px;
     height: 350px;
     padding: 20px;
-    padding-left:40px;
+    padding-left: 40px;
 
     border-radius: 30px;
     margin-top: 0px;
@@ -152,7 +197,7 @@ h2 {
     width: 390px;
     height: 350px;
     padding: 20px;
-    padding-left:0px;
+    padding-left: 0px;
     border-radius: 30px;
     /* background-color: antiquewhite; */
   }
