@@ -6,3 +6,8 @@ Hello my name is Aarav, this github repository contains the source code for my w
 1. Create a new comment on the discussion: "Welcome to Help/Support!"
 2. Type up your comment and press the green comment button to submit the comment.
 3. Wait for 24-48 hours for a reply to your comment.
+
+# Change Log
+9-7-2025: Website is Live
+9-10-2025: Support Chat is Live
+10-14-2025: UI Redesign
