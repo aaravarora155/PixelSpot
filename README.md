@@ -12,5 +12,4 @@ Hello my name is Aarav, this github repository contains the source code for my w
 
 9-10-2025: Support Chat is Live
 
-
 10-14-2025: UI Redesign
