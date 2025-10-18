@@ -3,7 +3,7 @@ $("button").click(async function() {
     const email = $(".emailEntered").val();
     const issue = $(".issueText").val();
 
-    const response = await fetch("trotty-inexpressively-rosette.ngrok-free.dev/send-email", {
+    const response = await fetch("https://trotty-inexpressively-rosette.ngrok-free.dev/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, issue })
