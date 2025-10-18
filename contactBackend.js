@@ -8,6 +8,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.post("/send-email", (req, res) => {
+    console.log("Request body:", req.body);
+    res.json({ message: "Email request received!" });
+});
+
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -26,7 +31,7 @@ function generateSubject() {
 app.post("/send-email", async (req, res) => {
     const { name, email, issue } = req.body;
 
-    const preparedStatement="Hello, "+name+"\n\t"+"This is the email that we were contacted from: "+email+"\n\t"+"This is the issue we are trying to resolve: "+issue+"\n\t"+"We are working hard to resolve your issue! If you have any further questions please contact us at: helpdesk.directory@gmail.com.";
+    const preparedStatement="Hello, "+name+"\n\t"+"This is the email that we were contacted from: "+email+". \n\t"+"This is the issue we are trying to resolve: "+issue+". \n\t"+"We are working hard to resolve your issue! If you have any further questions please contact us at: helpdesk.directory@gmail.com.";
 
     try {
         await transporter.sendMail({
