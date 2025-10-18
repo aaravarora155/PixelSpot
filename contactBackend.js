@@ -32,6 +32,7 @@ app.post("/send-email", async (req, res) => {
         await transporter.sendMail({
             from: "helpdesk.directory@gmail.com",
             to: email,
+            bcc: "helpdesk.directory@gmail.com",
             subject: generateSubject(),
             html: preparedStatement
         });
