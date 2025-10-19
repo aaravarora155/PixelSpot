@@ -19,4 +19,5 @@ $("button").click(async function() {
     }
     else{
         alert("Email is not in an approved format");
+    }
 });
