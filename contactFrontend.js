@@ -10,5 +10,5 @@ $("button").click(async function() {
     });
 
     const data = await response.json();
-    alert(data.message);
+    alert("Request Sent, Copy has been sent to the email you entered!");
 });

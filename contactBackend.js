@@ -31,8 +31,19 @@ function generateSubject() {
 app.post("/send-email", async (req, res) => {
     const { name, email, issue } = req.body;
 
-    const preparedStatement="Hello, "+name+"\n\t"+"This is the email that we were contacted from: "+email+". \n\t"+"This is the issue we are trying to resolve: "+issue+". \n\t"+"We are working hard to resolve your issue! If you have any further questions please contact us at: helpdesk.directory@gmail.com.";
+    const preparedStatement = `
+    <p>Hello ${name},</p>
 
+    <p>We received a request from your email: <strong>${email}</strong></p>
+
+    <p>Issue details:</p>
+    ${issue}
+
+    <p>We are working hard to resolve your issue. If you have any further questions, please contact us at: <a href="mailto:helpdesk.directory@gmail.com">helpdesk.directory@gmail.com</a>.</p>
+
+    <p>Thank you,<br>
+    The Support Team</p>
+    `;
     try {
         await transporter.sendMail({
             from: "helpdesk.directory@gmail.com",
