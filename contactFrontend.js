@@ -3,6 +3,7 @@ function valid(email){
     return pattern.test(email);
 }
 
+
 $("button").click(async function() {
     const name = $(".user").val();
     const email = $(".emailEntered").val();
