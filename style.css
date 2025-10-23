@@ -170,7 +170,12 @@ button{
   padding-bottom: 10px;
   
 }
-
+.Node-Files{
+  padding-left: 20px;
+}
+.Download-Node>table{
+  text-align: center;
+}
 
 
 
