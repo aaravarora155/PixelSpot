@@ -13,3 +13,5 @@ After submitting a support ticket through the website, you should receive an ema
 10-14-2025: UI Redesign
 
 12-1-2025: New Contact System is Live
+
+12-1-2025: Auto-Sort for support tickets are live (emails are easier to process)
