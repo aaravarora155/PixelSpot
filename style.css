@@ -176,7 +176,16 @@ button{
 .Download-Node>table{
   text-align: center;
 }
+.Download-Node>a{
+    color:#0033ff;
+}
+td{
 
+    padding-right: 10px;
+}
+td>a{
+    color: #0033ff;
+}
 
 
 
