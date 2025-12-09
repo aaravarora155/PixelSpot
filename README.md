@@ -1,11 +1,9 @@
 # HTML-Directory
 
-Hello my name is Aarav, this github repository contains the source code for my website. On the website you are able to find details about my previous programming experience as well as signficant games in python, my largest project of the year in Java, and my ongoing work with HTML, CSS, JavaScript, SQL and more. The website gets frequent updates and I perform quality control checks weekly, however if something seems wrong please contact me through the github repository.
+Hello, my name is Aarav. This GitHub repository contains the source code for my website. On the website, you can find details about my previous programming experience, as well as significant projects in Python, my largest project of the year in Java, and my ongoing work with HTML, CSS, JavaScript, SQL, and more. The website receives frequent updates, and I perform quality control checks on a weekly basis; however, if you notice any issues, please contact me through the GitHub repository.
 
-# Steps to Contacting me through the discussions.
-1. Create a new comment on the discussion: "Welcome to Help/Support!"
-2. Type up your comment and press the green comment button to submit the comment.
-3. Wait for 24-48 hours for a reply to your comment.
+# Contacting me through the website
+After submitting a support ticket through the website, you should receive an email within an hour (generally, this does not take this long) with a copy of your support ticket and an email address to contact for further assistance. If you are unable to receive the email, please email _helpdesk.directory@gmail.com_
 
 # Change Log
 9-7-2025: Website is Live  
@@ -13,3 +11,7 @@ Hello my name is Aarav, this github repository contains the source code for my w
 9-10-2025: Support Chat is Live
 
 10-14-2025: UI Redesign
+
+12-1-2025: New Contact System is Live
+
+12-1-2025: Auto-Sort for support tickets are live (emails are easier to process)
