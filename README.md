@@ -16,4 +16,6 @@ After submitting a support ticket through the website, you should receive an ema
 
 12-1-2025: Auto-Sort for support tickets is live (emails are easier to process)
 
-12-9-2025: Booking pages are now website-embedded instead of redirecting to google calendar
+12-9-2025: Booking pages are now website-embedded instead of redirecting to Google Calendar
+
+12-14-2025: Course Registration is live
