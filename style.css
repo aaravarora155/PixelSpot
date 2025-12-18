@@ -206,7 +206,7 @@ td>a{
 @media (max-width: 750px) {
   .top-bar {
     height: 50px;
-    width: 105%;
+    width: 100%;
     background-color: #2857a8;
     text-align: left;
     padding-top: 15px;
