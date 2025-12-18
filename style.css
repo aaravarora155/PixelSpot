@@ -180,16 +180,46 @@ button{
     color:#0033ff;
 }
 td{
-
     padding-right: 10px;
 }
 td>a{
     color: #0033ff;
 }
-
-
-
-
+summary>div{
+    width: 35px;
+    height: 5px;
+    background-color: white;
+    margin: 6px 0;
+}
+details{
+    position: relative;
+    margin-top: -10px;
+    padding-right: 30px;
+    float: right;
+    text-align: center;
+}
+details summary{
+    padding-top: 6px;
+    list-style: none;
+}
+details ul{
+    position: absolute;
+    right:35%;
+    top: 110%;
+    list-style:none;
+    margin-left: -15px;
+    width: 230px;
+    background-color: rgba(85, 92, 131, 0.65);
+    border-radius:20px;
+}
+details ul li{
+    padding: 10px 5px;
+    cursor: pointer;
+}
+details ul li:hover{
+    background-color: #009dff;
+    width:220px;
+}
 
 @media (max-width: 1250px) {
   .assignments-containers {
