@@ -6,3 +6,12 @@ $("details").on("mouseover", function(){
 $(".close").on("mouseout", function(){
     $("details").attr("open",false);
 })
+
+$(".blue").on("click", function(e){
+    if(confirm("THIS IS A NODE FILE, REQUIRES NODE.JS CHECK THE INSTALLATION AND USAGE INSTRUCTIONS!\nPRESS OK TO REDIRECT TO INSTRUCTIONS AND DOWNLOAD FILE OR PRESS CANCEL TO STOP DOWNLOAD")){
+        window.location.assign("https://aaravarora155.github.io/HTML-Directory/downloadingNodeFiles.html");
+    }
+    else{
+        e.preventDefault();
+    }
+})
