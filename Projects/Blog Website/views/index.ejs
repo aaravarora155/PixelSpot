@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Blog Application</title>
+        <link href="styles.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="header">
+            <h1>Home</h1>
+            <form action="/create" method="POST">
+                <input id="create" type="submit" value="Create Post">
+            </form>
+        </div>
+        <div class="screen">
+            <%if (locals.authors&&locals.titles){%>
+            <%for (let i=0;i<authors.length&&i<titles.length;i++){%>
+            <div class="spacer"></div>
+            <div class="post">
+                <h2><%=titles[i]%></h2>
+                <hr>
+                <h3><%="Written By: "+authors[i]%></h3>
+                <hr>
+                <form class="buttonPan" action="/edit" method="POST">
+                    <input id="edit" type="submit" value="Edit">
+                </form>
+                <form class="buttonPan" action="/delete" method="POST">
+                    <input id="delete" type="submit" value="Delete">
+                </form>
+                <form class="buttonPan" action="/view" method="POST">
+                    <input id="view" type="submit" value="View">
+                </form>
+            </div>
+
+            <%}%>
+            <%}%>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Application</title>
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div id="header">
+        <h1>Create Post</h1>
+        <form action="/" method="GET">
+            <input id="create" type="submit" value="Home">
+        </form>
+    </div>
+
+    <div id="form">
+        <form action="/submit" method="POST">
+            <div id="title">
+                <label>Title</label>
+                <input type="text" name="title" placeholder="Enter Name" required>
+            </div>
+            <div id="author">
+                <label>Author</label>
+                <input type="text" name="author" placeholder="Enter Author" required>
+            </div>
+            <div id="content">
+                <textarea name="bodyPost" rows="6" cols="80" placeholder="Start writing post" required></textarea>
+                <br>
+                <input id="buttonsub" type="submit" value="Submit">
+            </div>
+
+        </form>
+    </div>
+
+</body>
+</html>

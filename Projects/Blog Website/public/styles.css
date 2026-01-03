@@ -1,0 +1,82 @@
+#header{
+    background: rgba(28, 115, 115, 0.87);
+    width:calc(100% + 16px);
+    margin:-8px;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+}
+#create{
+    margin-right:30px;
+    border-radius:15px;
+    padding: 5px 10px;
+    border-color:rgba(28, 115, 115, 0.87);
+    border-style: groove;
+}
+#header>h1{
+    margin: 0px;
+    padding:10px;
+    color: rgba(255, 255, 255, 0.87);
+}
+#form{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-top:30px;
+}
+#title{
+    text-align: center;
+    padding-bottom:10px;
+}
+#author{
+    text-align: center;
+    padding-bottom:10px;
+}
+#content{
+    text-align: center;
+    padding-bottom:10px;
+}
+#buttonsub{
+    margin-right:30px;
+    border-radius:15px;
+    padding: 5px 10px;
+    border-color:rgba(28, 115, 115, 0.87);
+    border-style: groove;
+}
+.post{
+    background: rgba(177, 220, 220, 0.87);
+    border-radius:10px;
+    width: 300px;
+    margin-bottom:30px;
+
+}
+
+.post>h2{
+    margin-left:20px;
+    padding-top:8px;
+}
+.post>h3{
+    margin-left:20px;
+    padding-bottom:10px;
+}
+.screen {
+    display: grid;
+    margin-top: 30px;
+    grid-template-columns: 300px 300px 10px 300px 10px 300px 10px 300px 10px 300px;
+    margin-left: -300px;
+}
+.spacer{
+    width:10px;
+}
+.buttonPan{
+    padding-top:10px;
+    padding-left:15px;
+}
+.buttonPan>input{
+    margin-right:30px;
+    border-radius:15px;
+    padding: 5px 10px;
+    border-color:rgba(28, 115, 115, 0.87);
+    border-style: groove;
+}
