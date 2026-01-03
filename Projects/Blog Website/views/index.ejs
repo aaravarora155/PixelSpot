@@ -20,20 +20,15 @@
                 <hr>
                 <h3><%="Written By: "+authors[i]%></h3>
                 <hr>
-                <form class="buttonPan" action="/edit" method="POST">
-                    <input id="edit" type="submit" value="Edit">
-                </form>
-                <form class="buttonPan" action="/delete" method="POST">
-                    <input id="delete" type="submit" value="Delete">
-                </form>
-                <form class="buttonPan" action="/view" method="POST">
-                    <input id="view" type="submit" value="View">
+                <form class="buttonPan">
+                    <input id="edit" type="submit" value="Edit" formaction="/edit" formmethod="POST">
+                    <input id="view" type="submit" value="View" formaction="/view" formmethod="GET">
+                    <input id="delete" type="submit" value="Delete" formaction="/delete" formmethod="POST">
                 </form>
             </div>
 
             <%}%>
             <%}%>
         </div>
-
     </body>
 </html>

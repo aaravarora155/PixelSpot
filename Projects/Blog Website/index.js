@@ -9,13 +9,11 @@ const port = 3000;
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let counter=0;
 let authors = [];
 let titles = [];
 
 function storeFile(name,title,body) {
-    let postPath = 'posts/' + name + '.txt';
-    counter += 1;
+    let postPath = 'posts/' + title + '.txt';
     const message = "Author: " + name + "\n\n" + "Title: " + title + "\n\n" + "Body: " + body;
     fs.writeFile(postPath, message, (err) => {
         if (err) throw err;
@@ -43,9 +41,13 @@ app.post("/edit", (req, res) => {
 
 })
 app.post("/delete", (req, res) => {
-
+    console.log(authors+"-"+titles);
+    authors=authors.splice(authors.indexOf(req.body["author"]),1);
+    titles=titles.splice(titles.indexOf(req.body["title"]),1);
+    console.log(authors+"-"+titles);
+    res.render("index.ejs",{"authors":authors,"titles":titles});
 })
-app.post("/view", (req, res) => {
+app.get("/view", (req, res) => {
 
 })
 app.listen(port, () => {
