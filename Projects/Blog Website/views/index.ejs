@@ -11,24 +11,31 @@
                 <input id="create" type="submit" value="Create Post">
             </form>
         </div>
-        <div class="screen">
-            <%if (locals.authors&&locals.titles){%>
-            <%for (let i=0;i<authors.length&&i<titles.length;i++){%>
-            <div class="spacer"></div>
-            <div class="post">
-                <h2><%=titles[i]%></h2>
-                <hr>
-                <h3><%="Written By: "+authors[i]%></h3>
-                <hr>
-                <form class="buttonPan">
-                    <input id="edit" type="submit" value="Edit" formaction="/edit" formmethod="POST">
-                    <input id="view" type="submit" value="View" formaction="/view" formmethod="GET">
-                    <input id="delete" type="submit" value="Delete" formaction="/delete" formmethod="POST">
-                </form>
-            </div>
 
-            <%}%>
-            <%}%>
+        <%if (locals.message&&locals.type){%>
+            <div class="tile">
+                <%if (type===true){%>
+                    <%-message%>
+                <%}%>
+            </div>
+        <%}%>
+        <div id="form">
+            <form class="buttonPan" method="POST" action="/options">
+                <div id="title">
+                    <label>Title</label>
+                    <input type="text" name="title" placeholder="Enter Title" required>
+                </div>
+                <div id="content">
+                    <textarea name="bodyPost" rows="6" cols="80" placeholder="Post Body"></textarea>
+                    <br>
+                </div>
+                <div id="buttons">
+                    <input id="edit" type="submit" value="Edit" formaction="/edit">
+                    <input id="view" type="submit" value="View" formaction="/view">
+                    <input id="delete" type="submit" value="Delete" formaction="/delete">
+                </div>
+
+            </form>
         </div>
     </body>
 </html>

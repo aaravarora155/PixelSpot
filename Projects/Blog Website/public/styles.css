@@ -71,12 +71,20 @@
 }
 .buttonPan{
     padding-top:10px;
-    padding-left:15px;
+    padding-left:30px;
+    padding-bottom:10px;
 }
-.buttonPan>input{
+.buttonPan>#buttons>input{
     margin-right:30px;
     border-radius:15px;
     padding: 5px 10px;
     border-color:rgba(28, 115, 115, 0.87);
     border-style: groove;
+}
+#buttons{
+    padding-left:200px;
+}
+.tile{
+
+    text-align: center;
 }
