@@ -1,0 +1,13 @@
+.top-bar{
+    background-color: rgba(34, 255, 0, 0.4);
+    margin-left: -9px;
+    width: 101%;
+
+}
+h1{
+    color: rgba(0, 0, 0, 0.87);
+    padding-left: 20px;
+    margin-top: -10px;
+    padding-top:15px;
+    padding-bottom: 15px;
+}
