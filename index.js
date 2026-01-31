@@ -15,3 +15,11 @@ $(".blue").on("click", function(e){
         e.preventDefault();
     }
 })
+$(".red").on("click", function(e){
+    if(confirm("THIS IS A SQL FILE, REQUIRES DataGrip CHECK THE INSTALLATION AND USAGE INSTRUCTIONS!\nPRESS OK TO REDIRECT TO INSTRUCTIONS AND DOWNLOAD FILE OR PRESS CANCEL TO STOP DOWNLOAD")){
+        window.location.assign("https://aaravarora155.github.io/HTML-Directory/Download%20Instructions/downloadingSQLFiles.html");
+    }
+    else{
+        e.preventDefault();
+    }
+})
