@@ -6,16 +6,15 @@ CREATE TABLE products(
 );
 
 INSERT INTO products
-VALUES (1,"Pen",1.20,32);
+VALUES (1,'Pen',1.20);
 
 INSERT INTO products
-VALUES (1, "Pencil",0.80,12);
+VALUES (2, 'Pencil',0.80);
 
-SELECT * FROM products
-WHERE name="Pen";
+INSERT INTO products
+VALUES (3, 'Eraser',0.60);
 
-SELECT * FROM products
-WHERE price=1.4;
+SELECT * FROM products;
 
 UPDATE products
 SET price=1.4
@@ -29,4 +28,6 @@ SET quantity=30
 WHERE quantity IS NULL;
 
 DELETE FROM products
-WHERE quantity=30;
+WHERE id=3;
+
+SELECT * FROM products;
