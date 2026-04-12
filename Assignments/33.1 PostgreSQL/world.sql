@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS capitals(
 );
 
 --Edit Path to your CSV file
-COPY capitals FROM 'C:\Web Applications\Hosting\Assignments\33 PostgreSQL\capitals.csv' DELIMITER ',' CSV HEADER;
+COPY capitals FROM 'C:\Web Applications\Hosting\Assignments\33.1 PostgreSQL\capitals.csv' DELIMITER ',' CSV HEADER;
