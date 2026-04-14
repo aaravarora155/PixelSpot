@@ -93,7 +93,7 @@ app.post("/user", async (req, res) => {
 
 app.post("/new", async (req, res) => {
   //Hint: The RETURNING keyword can return the data that was inserted.
-  //https://www.postgresql.org/docs/current/dml-returning.html
+  //https://www.postgresql.org/docs/current/dml-returning
   try {
     const id = await db.query("INSERT INTO users (name, color) VALUES ($1, $2) RETURNING id", [req.body.name, req.body.color]);
     users.push({ id: id.rows[0].id, name: req.body.name, color: req.body.color });
