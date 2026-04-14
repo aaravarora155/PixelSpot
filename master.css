@@ -124,6 +124,45 @@ details ul li:hover{
     height:210px;
 }
 
+#title{
+    color:white;
+    position:absolute;
+    left:2%;
+    top:3px;
+}
+.assignments-containers {
+  display: grid;
+  text-align: center;
+  justify-content: center;
+  grid-template-columns: 220px 220px 220px 220px 220px;
+  column-gap: 20px;
+  padding-left: 0px;
+  margin-left: 0px;
+}
+.assignments-tiles {
+  width: 220px;
+  margin: 20px;
+  height: 40px;
+  padding-top: 15px;
+  background-color: rgba(238, 65, 22, 0.784);
+  border-radius: 15px;
+}
+.assignments-tiles > a {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-weight: 80;
+  color: white;
+}
+.spacer{
+  height: 80px;
+  padding:20px;
+}
+i{
+    color:white;
+    font-size: 30px;
+    position:absolute;
+    right:5%;
+    top:3.5%;
+}
 /* The typing effect */
 @keyframes typing {
   from { width: 0 }

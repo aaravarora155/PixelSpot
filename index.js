@@ -3,9 +3,6 @@ $("#bottom").css("border-radius", "0px 0px 20px 20px");
 $("details").on("mouseover", function () {
     $("details").attr("open", true);
 })
-$("#menu-text").on("mouseover", function () {
-    $("details").attr("open", true);
-})
 $(".close").on("mouseout", function () {
     $("details").attr("open", false);
 })
