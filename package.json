@@ -20,13 +20,13 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aaravarora155/HTML-Directory.git"
+    "url": "git+https://github.com/aaravarora155/PixelSpot.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aaravarora155/HTML-Directory/issues"
+    "url": "https://github.com/aaravarora155/PixelSpot/issues"
   },
-  "homepage": "https://github.com/aaravarora155/HTML-Directory#readme"
+  "homepage": "https://github.com/aaravarora155/PixelSpot#readme"
 }
