@@ -26,6 +26,7 @@ details{
     padding-right: 30px;
     float: right;
     text-align: center;
+    z-index: 1000;
 }
 details summary{
     padding-top: 6px;
@@ -39,9 +40,10 @@ details ul{
     list-style:none;
     margin-left: -15px;
     width: 230px;
-    background-color: #4b50f17b;
+    background-color: #4b50f1;
     border-radius:20px;
     padding-left: 0px;
+    z-index: 1000;
 }
 details ul li{
     padding: 10px 5px;
@@ -64,6 +66,7 @@ details ul li:hover{
     top: 250px;
     left: 15%;
     transform: translate(-50%, -50%);
+    padding-left:10px;
 }
 .dot>img{
     object-fit: cover;
@@ -78,6 +81,7 @@ details ul li:hover{
     transform: translate(-50%, -50%);
     font-size:xx-large;
     color: white;
+    padding-left:40px;
 }
 #top-bar>h2{
     color:white;
@@ -131,4 +135,90 @@ details ul li:hover{
 @keyframes blink-caret {
   from, to { border-color: transparent }
   50% { border-color: orange; }
+}
+
+/* --- Media Queries --- */
+
+/* Mobile Devices (Max-width: 768px) */
+@media screen and (max-width: 768px) {
+    #top-bar {
+        height: 600px;
+    }
+
+    .dot {
+        width: 200px;
+        height: 200px;
+        top: 180px;
+        left: 50%;
+    }
+    #welcome-text {
+        top: 330px;
+        left: 50%;
+        font-size: x-large;
+        text-align: center;
+        width: 90%;
+        white-space: normal;
+    }
+    .typewriter h1 {
+        white-space: normal;
+        border-right: none;
+        animation: none;
+        width: 100%;
+    }
+    #about-me-container {
+        flex-direction: column;
+    }
+    #about-me, #certifications {
+        width: 100%;
+        height: auto;
+        padding: 20px 0;
+    }
+    .cert-img {
+        width: 70%;
+        height: auto;
+    }
+}
+
+/* Laptops (10-16 inches, 769px to 1440px) */
+@media screen and (min-width: 769px) and (max-width: 1440px) {
+    .dot {
+        width: 300px;
+        height: 300px;
+        left: 20%;
+    }
+    #welcome-text {
+        left: 65%; /* shifted further right to fix overlap with image */
+        font-size: 1.8rem;
+    }
+    #top-bar > h2 {
+        right: 100px; /* shifted further left to avoid overlapping the menu details */
+    }
+    #about-me, #certifications {
+        height: auto;
+        min-height: 550px;
+    }
+    .cert-img{
+        width:70%;
+        height:auto;
+    }
+}
+
+/* Larger Devices (Monitors and TVs, Min-width: 1441px) */
+@media screen and (min-width: 1441px) {
+    .dot {
+        width: 450px;
+        height: 450px;
+        left: 25%;
+    }
+    #welcome-text {
+        left: 60%;
+        font-size: 3rem;
+    }
+    #top-bar {
+        height: 600px;
+    }
+    #about-me, #certifications {
+        height: auto;
+        min-height: 600px;
+    }
 }
