@@ -1,11 +1,11 @@
 body{
     margin: 0px;
     font-family: 'Courier New', Courier, monospace;
-    background: linear-gradient(to right, #4b51f1, #e44040);
 }
 #top-bar{
     width:100%;
-    height:100vh;
+    height:500px;
+    background: linear-gradient(to right, #4b51f1, #e44040);
 }
 details{
     position: relative;
@@ -95,6 +95,30 @@ details ul li:hover{
   animation: 
     typing 3.5s steps(40, end),
     blink-caret .75s step-end infinite;
+}
+#about-me-container{
+    display:flex;
+    background: linear-gradient(to right, #4b51f1, #e44040);
+}
+#about-me, #certifications{
+    width:50%;
+    height:550px;
+}
+#certifications>ul>li>h3{
+    color:white;
+}
+#about-me, #certifications>ul>ul>li{
+    color:white;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+#about-me>ul, #certifications>ul{
+    list-style: none;
+    font-weight:500;
+}
+.cert-img{
+    width:300px;
+    height:210px;
 }
 
 /* The typing effect */
