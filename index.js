@@ -3,13 +3,16 @@ $("#bottom").css("border-radius","0px 0px 20px 20px");
 $("details").on("mouseover", function(){
     $("details").attr("open",true);
 })
+$("#menu-text").on("mouseover", function(){
+    $("details").attr("open",true);
+})
 $(".close").on("mouseout", function(){
     $("details").attr("open",false);
 })
 
 $(".blue").on("click", function(e){
     if(confirm("THIS IS A NODE FILE, REQUIRES NODE.JS CHECK THE INSTALLATION AND USAGE INSTRUCTIONS!\nPRESS OK TO REDIRECT TO INSTRUCTIONS AND DOWNLOAD FILE OR PRESS CANCEL TO STOP DOWNLOAD")){
-        window.location.assign("https://aaravarora155.github.io/HTML-Directory/Download%20Instructions/downloadingNodeFiles.html");
+        window.location.assign("https://aaravarora155.github.io/PixelSpot/Download%20Instructions/downloadingNodeFiles.html");
     }
     else{
         e.preventDefault();
@@ -17,7 +20,7 @@ $(".blue").on("click", function(e){
 })
 $(".red").on("click", function(e){
     if(confirm("THIS IS A SQL FILE, REQUIRES POSTGRESQL CHECK THE INSTALLATION AND USAGE INSTRUCTIONS!\nPRESS OK TO REDIRECT TO INSTRUCTIONS AND DOWNLOAD FILE OR PRESS CANCEL TO STOP DOWNLOAD")){
-        window.location.assign("https://aaravarora155.github.io/HTML-Directory/Download%20Instructions/downloadingSQLFiles.html");
+        window.location.assign("https://aaravarora155.github.io/PixelSpot/Download%20Instructions/downloadingSQLFiles.html");
     }
     else{
         e.preventDefault();
