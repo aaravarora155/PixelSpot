@@ -1,4 +1,4 @@
-# HTML-Directory
+# PixelSpot
 
 Hello, my name is Aarav. This GitHub repository contains the source code for my website. On the website, you can find details about my previous programming experience, as well as significant projects in Python, my largest project of the year in Java, and my ongoing work with HTML, CSS, JavaScript, SQL, and more. The website receives frequent updates, and I perform quality control checks on a weekly basis; however, if you notice any issues, please contact me through the Contact Form.
 
