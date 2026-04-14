@@ -12,22 +12,23 @@
     <a style="float: right;" href="https://aaravarora155.github.io/PixelSpot/"><i class="fa-regular fa-house"></i></a>
     <h1 id="title">Contact Us</h1>
   </div>
-  <div class="spacer" style="height:10px;"></div>
-  <div class="contact">
-    <h2 style="text-align: center; padding-top: 30px">Contact Information</h2>
-    <div class="name">
-      <label class="a">Name:</label>
-      <input class="user" placeholder="Enter Name" />
+  <div class="contact-container">
+    <div class="contact-card">
+      <h2 class="contact-title">Contact Information</h2>
+      <div class="input-group">
+        <label class="contact-label">Name</label>
+        <input class="user contact-input" placeholder="Enter Name" />
+      </div>
+      <div class="input-group">
+        <label class="contact-label">Email</label>
+        <input class="emailEntered contact-input" type="email" placeholder="Enter Email"/>
+      </div>
+      <div class="input-group">
+        <label class="contact-label">Issue</label>
+        <textarea class="issueText contact-input" placeholder="Enter Issue" id="text" rows="5" spellcheck="false"></textarea>
+      </div>
+      <button class="contact-submit">Submit</button>
     </div>
-    <div class="email">
-      <label class="a">Email:</label>
-      <input class="emailEntered" placeholder="Enter Email" />
-    </div>
-    <div class="issue">
-      <label class="a" style="transform: translateY(-160%);">Issue:</label>
-      <textarea class="issueText" placeholder="Enter Issue" id="text" rows="6" cols="60" spellcheck="false"></textarea>
-    </div>
-    <button>Submit</button>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="./Contact/contactFrontend.js"></script>
