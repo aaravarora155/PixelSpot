@@ -8,6 +8,31 @@
 
 body {
   margin: 0px;
+  font-family: 'Courier New', Courier, monospace;
+  background: linear-gradient(to right, #4b51f1, #e44040);
+  color: white;
+}
+
+#title {
+  color: white;
+  position: absolute;
+  left: 2%;
+  top: 3px;
+}
+
+i {
+  color: white;
+  font-size: 30px;
+  position: absolute;
+  right: 5%;
+  top: 3.5%;
+}
+
+iframe {
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.85);
+  margin: 20px;
 }
 body > h2 {
   text-align: center;
