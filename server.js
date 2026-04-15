@@ -15,7 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname)); // Serve root assets (master.css, index.js, etc.)
 
 const projects = [
-    { path: '/25.1-EJS/', folder: './Assignments/25.1 EJS Tags/index.js' },
     { path: '/28.1-JSON/', folder: './Assignments/28.1 JSON/index.js' },
     { path: '/28.2-Axios/', folder: './Assignments/28.2 Axios/index.js' },
     { path: '/28.3-API-Authentication/', folder: './Assignments/28.3 API Authentication/index.js' },
