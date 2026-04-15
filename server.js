@@ -40,31 +40,32 @@ async function loadProjects() {
             const router = module.default;
 
             if (router) {
-                // 1. THE CSS FIX: Map the project's folder to its specific URL path
-                app.use(project.path, express.static(projectDir));
+                // 1. STATIC FIX: High-priority static serving
+                app.use(project.path, express.static(projectDir, { index: false }));
 
-                // 2. THE POST/ROUTE FIX: The "Path Shifter"
+                // 2. SANDBOX MIDDLEWARE
                 app.use(project.path, (req, res, next) => {
-                    // Fix Views (500 Error Fix)
-                    const originalViews = req.app.get('views');
-                    req.app.set('views', path.join(projectDir, 'views'));
+                    // Fix "Confusing projects" - Override the render function
+                    const _render = res.render;
+                    res.render = function(view, options, fn) {
+                        const projectViews = path.join(projectDir, 'views');
+                        // Force Express to look in the specific project folder
+                        if (typeof options === 'function') { fn = options; options = {}; }
+                        const viewPath = path.join(projectViews, view.endsWith('.ejs') ? view : view + '.ejs');
+                        return _render.call(this, viewPath, options, fn);
+                    };
 
-                    // Fix POST/GET Paths: Strip the prefix so /24-Secrets-Project/submit 
-                    // becomes just /submit inside the sub-router
+                    // Fix POST routes - Strip prefix so /project/submit becomes /submit
                     const originalUrl = req.url;
-                    const originalBaseUrl = req.baseUrl;
-                    
                     req.url = req.url === '' ? '/' : req.url;
 
-                    // Execute the project
                     router(req, res, (err) => {
-                        // Cleanup
-                        req.app.set('views', originalViews);
+                        req.url = originalUrl; // Restore for next middleware
                         next(err);
                     });
                 });
 
-                console.log(`✅ Loaded ${project.path}`);
+                console.log(`✅ Sandboxed ${project.path}`);
             }
         } catch (e) {
             console.error(`❌ Failed ${project.path}:`, e.message);
