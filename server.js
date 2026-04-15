@@ -39,29 +39,31 @@ async function loadProjects() {
             const module = await import(fileUrl);
             const router = module.default;
 
-            if (router && router.stack) {
-                console.log(`\n🔍 Scanning routes for ${project.path}:`);
-                router.stack.forEach(r => {
-                    if (r.route && r.route.path) {
-                        console.log(`   ➡️ ${Object.keys(r.route.methods).join(', ').toUpperCase()} ${r.route.path}`);
-                    }
-                });
-            } else {
-                console.log(`\n⚠️ WARNING: ${project.path} exported something, but it is NOT a valid Express Router!`);
-            }
-
             if (router) {
-                // 1. Serve static files (CSS/JS) from the sub-folder
+                // 1. Serve static files (CSS/JS) automatically from the sub-folder
                 app.use(project.path, express.static(projectDir));
 
-                // 2. The Fix: Strip the prefix so the assignment thinks it's at '/'
+                // 2. The Universal Fixer Middleware
                 app.use(project.path, (req, res, next) => {
-                    const oldUrl = req.url;
-                    // If the URL is empty or just the path, set it to '/'
-                    req.url = (req.url === '' || req.url === '/') ? '/' : req.url;
+                    // FIX INTERNAL SERVER ERROR: 
+                    // Temporarily point Express to THIS project's views folder
+                    const originalViews = req.app.get('views');
+                    req.app.set('views', path.join(projectDir, 'views'));
                     
-                    // Pass the request to the assignment
-                    router(req, res, next);
+                    // FIX CANNOT GET:
+                    // Ensure the sub-router sees '/' instead of the full path
+                    const originalUrl = req.url;
+                    req.url = (req.url === '' || req.url === '/') ? '/' : req.url;
+
+                    // Execute the project code
+                    router(req, res, (err) => {
+                        // Restore original views after the request is handled
+                        req.app.set('views', originalViews);
+                        next(err);
+                    });
+                    
+                    // Restore URL after router execution
+                    req.url = originalUrl;
                 });
 
                 console.log(`✅ Loaded ${project.path}`);
