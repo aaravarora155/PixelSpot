@@ -39,6 +39,17 @@ async function loadProjects() {
             const module = await import(fileUrl);
             const router = module.default;
 
+            if (router && router.stack) {
+                console.log(`\n🔍 Scanning routes for ${project.path}:`);
+                router.stack.forEach(r => {
+                    if (r.route && r.route.path) {
+                        console.log(`   ➡️ ${Object.keys(r.route.methods).join(', ').toUpperCase()} ${r.route.path}`);
+                    }
+                });
+            } else {
+                console.log(`\n⚠️ WARNING: ${project.path} exported something, but it is NOT a valid Express Router!`);
+            }
+
             if (router) {
                 // 1. Serve static files (CSS/JS) from the sub-folder
                 app.use(project.path, express.static(projectDir));
