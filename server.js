@@ -32,68 +32,56 @@ const projects = [
     { path: '/32-Book-Notes-Project/', folder: './Projects/Book Notes Project/index.js' }
 ];
 
+// 2. Load projects and sandbox them
 async function loadProjects() {
     for (const project of projects) {
         try {
             const absolutePath = path.resolve(__dirname, project.folder);
             const projectDir = path.dirname(absolutePath);
             const fileUrl = pathToFileURL(absolutePath).href;
-            
             const module = await import(fileUrl);
             const router = module.default;
 
             if (router) {
-                // A. STATIC ASSETS: Serve them specifically for the project path
-                app.use(project.path, express.static(projectDir, { index: false }));
+                // Serve assets for this project specifically
+                app.use(project.path, express.static(projectDir));
 
-                // B. THE SANDBOX: Intercepts requests to fix sub-project behavior
                 app.use(project.path, (req, res, next) => {
-                    // Fix Views: Override res.render so it looks in the sub-folder
+                    // SANDBOX EJS: Force the lookup to the sub-folder
                     const _render = res.render;
                     res.render = function(view, options, fn) {
                         const viewPath = path.join(projectDir, 'views', view.endsWith('.ejs') ? view : view + '.ejs');
                         return _render.call(this, viewPath, options, fn);
                     };
-
-                    // Fix Routing: Strip prefix so '/24-Secrets-Project/submit' becomes '/submit'
+                    
+                    // NORMALIZE PATH: Strip prefix for the sub-router
                     const originalUrl = req.url;
                     req.url = (req.url === '' || req.url === '/') ? '/' : req.url;
-
+                    
                     router(req, res, (err) => {
-                        req.url = originalUrl; // Reset for potential next middleware
+                        req.url = originalUrl;
                         next(err);
                     });
                 });
-                console.log(`✅ Fully Integrated: ${project.path}`);
             }
-        } catch (e) {
-            console.error(`❌ Failed ${project.path}:`, e.message);
-        }
+        } catch (e) { console.error(e); }
     }
 }
 
 await loadProjects();
 
 // --- 2. THE STRAY REQUEST CATCHER (Fixes CSS & POST routes with leading slashes) ---
+// This is a "Global Search" for CSS/Assets that dropped their prefix
 app.use((req, res, next) => {
-    const referer = req.get('Referer');
-    if (referer) {
-        const matchingProject = projects.find(p => referer.includes(p.path));
-        
-        if (matchingProject) {
-            const projectDir = path.dirname(path.resolve(__dirname, matchingProject.folder));
+    // Only intercept if the request looks like a file (has a dot)
+    if (req.url.includes('.')) {
+        for (const project of projects) {
+            const projectDir = path.dirname(path.resolve(__dirname, project.folder));
+            const potentialPath = path.join(projectDir, req.url);
             
-            // Fix CSS/JS: If the browser asks for "/css/style.css" instead of "/project/css/style.css"
-            if (req.method === 'GET' && (req.url.includes('.') || req.url.includes('css'))) {
-                return res.sendFile(path.join(projectDir, req.url), (err) => {
-                    if (err) next(); // If file not found, continue to 404
-                });
-            }
-
-            // Fix POST: If a form submits to "/submit" instead of "/project/submit"
-            if (req.method === 'POST') {
-                // 307 Temporary Redirect preserves the POST body data
-                return res.redirect(307, matchingProject.path + req.url);
+            // Check if the file exists in this project's folder
+            if (fs.existsSync(potentialPath)) {
+                return res.sendFile(potentialPath);
             }
         }
     }
