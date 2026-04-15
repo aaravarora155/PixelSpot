@@ -48,7 +48,16 @@ app.use((req, res, next) => {
             
             if (project && !req.url.startsWith(project.path)) {
                 // Fix absolute paths (e.g. /css/style.css -> /project/css/style.css)
-                req.url = path.posix.join(project.path, req.url);
+                const newPath = path.posix.join(project.path, req.url);
+                
+                // If it's a page request (no dot), redirect so browser URL is fixed
+                if (!req.url.includes('.')) {
+                    console.log(`🚀 Redirecting to fixed path: ${newPath}`);
+                    return res.redirect(307, newPath);
+                }
+                
+                // If it's an asset, internal rewrite is fine
+                req.url = newPath;
             }
         } catch (e) { /* ignore safe */ }
     }
