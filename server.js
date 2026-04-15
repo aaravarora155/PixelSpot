@@ -39,20 +39,17 @@ async function loadProjects() {
             const router = module.default;
 
             if (router) {
-                // 1. Static files (CSS/JS)
+                // 1. Serve static files (CSS/JS) from the sub-folder
                 app.use(project.path, express.static(projectDir));
 
-                // 2. The Universal Adapter
+                // 2. The Fix: Strip the prefix so the assignment thinks it's at '/'
                 app.use(project.path, (req, res, next) => {
-                    // This strips the prefix so the sub-project thinks it's at '/'
-                    const originalUrl = req.url;
-                    req.url = req.url === '' ? '/' : req.url; 
+                    const oldUrl = req.url;
+                    // If the URL is empty or just the path, set it to '/'
+                    req.url = (req.url === '' || req.url === '/') ? '/' : req.url;
                     
-                    // Call the sub-project logic
+                    // Pass the request to the assignment
                     router(req, res, next);
-                    
-                    // Restore URL for other middleware (optional)
-                    req.url = originalUrl;
                 });
 
                 console.log(`✅ Loaded ${project.path}`);
