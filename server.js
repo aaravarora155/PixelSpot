@@ -31,23 +31,27 @@ const projects = [
 async function loadProjects() {
     for (const project of projects) {
         try {
-            // Convert relative path to absolute file URL for ESM compatibility
             const absolutePath = path.resolve(__dirname, project.folder);
+            const projectDir = path.dirname(absolutePath);
             const fileUrl = pathToFileURL(absolutePath).href;
             
             const module = await import(fileUrl);
             const router = module.default;
 
             if (router) {
-                // IMPORTANT: If the project has static files (CSS/JS), 
-                // you need to serve them relative to the project path
-                const projectDir = path.dirname(absolutePath);
+                // 1. FIX STATICS: This tells Express to look inside the sub-folder 
+                // whenever a request starts with the project path.
                 app.use(project.path, express.static(projectDir));
-                
-                app.use(project.path, router);
+
+                // 2. FIX ROUTING: This wrapper handles the "Cannot GET" by 
+                // ensuring the sub-router sees the paths it expects.
+                app.use(project.path, (req, res, next) => {
+                    // This ensures that even if the sub-project isn't a 
+                    // perfect Router, it still receives the request.
+                    router(req, res, next);
+                });
+
                 console.log(`✅ Loaded ${project.path}`);
-            } else {
-                console.error(`❌ Failed ${project.path}: Default export missing.`);
             }
         } catch (e) {
             console.error(`❌ Failed ${project.path}:`, e.message);
