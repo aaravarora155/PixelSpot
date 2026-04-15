@@ -7,11 +7,10 @@ const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "world",
-    password: "data",
-    port: 5432,
+  connectionString:"postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
+  ssl:{
+    rejectUnauthorized: false
+  }
 });
 db.connect();
 
