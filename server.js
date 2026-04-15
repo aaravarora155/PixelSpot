@@ -14,6 +14,7 @@ app.set('strict routing', false);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname)); // Serve root assets (master.css, index.js, etc.)
+app.use(express.static('Hosting', { extensions: ['html'] }));
 
 const projects = [
     { path: '/28.1-JSON/', folder: './Assignments/28.1 JSON/index.js' },
