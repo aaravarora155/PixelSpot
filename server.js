@@ -40,30 +40,28 @@ async function loadProjects() {
             const router = module.default;
 
             if (router) {
-                // 1. Serve static files (CSS/JS) automatically from the sub-folder
+                // 1. THE CSS FIX: Map the project's folder to its specific URL path
                 app.use(project.path, express.static(projectDir));
 
-                // 2. The Universal Fixer Middleware
+                // 2. THE POST/ROUTE FIX: The "Path Shifter"
                 app.use(project.path, (req, res, next) => {
-                    // FIX INTERNAL SERVER ERROR: 
-                    // Temporarily point Express to THIS project's views folder
+                    // Fix Views (500 Error Fix)
                     const originalViews = req.app.get('views');
                     req.app.set('views', path.join(projectDir, 'views'));
-                    
-                    // FIX CANNOT GET:
-                    // Ensure the sub-router sees '/' instead of the full path
-                    const originalUrl = req.url;
-                    req.url = (req.url === '' || req.url === '/') ? '/' : req.url;
 
-                    // Execute the project code
+                    // Fix POST/GET Paths: Strip the prefix so /24-Secrets-Project/submit 
+                    // becomes just /submit inside the sub-router
+                    const originalUrl = req.url;
+                    const originalBaseUrl = req.baseUrl;
+                    
+                    req.url = req.url === '' ? '/' : req.url;
+
+                    // Execute the project
                     router(req, res, (err) => {
-                        // Restore original views after the request is handled
+                        // Cleanup
                         req.app.set('views', originalViews);
                         next(err);
                     });
-                    
-                    // Restore URL after router execution
-                    req.url = originalUrl;
                 });
 
                 console.log(`✅ Loaded ${project.path}`);
