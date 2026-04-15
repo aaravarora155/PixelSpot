@@ -7,25 +7,26 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
+app.set('strict routing', false);
 
 const projects = [
-    { path: '/25.1-EJS', folder: './Assignments/25.1 EJS Tags/index.js' },
-    { path: '/28.1-JSON', folder: './Assignments/28.1 JSON/index.js' },
-    { path: '/28.2-Axios', folder: './Assignments/28.2 Axios/index.js' },
-    { path: '/28.3-API-Authentication', folder: './Assignments/28.3 API Authentication/index.js' },
-    { path: '/28.4-REST-APIs', folder: './Assignments/28.4 REST APIs/index.js' },
-    { path: '/30.1-DIY-API', folder: './Assignments/30.1 DIY API/index.js' },
-    { path: '/33.1-PostgreSQL', folder: './Assignments/33.1 PostgreSQL/index.js' },
-    { path: '/33.5-Family-Travel-Tracker', folder: './Assignments/33.5 Family Travel Tracker/index.js' },
+    { path: '/25.1-EJS/', folder: './Assignments/25.1 EJS Tags/index.js' },
+    { path: '/28.1-JSON/', folder: './Assignments/28.1 JSON/index.js' },
+    { path: '/28.2-Axios/', folder: './Assignments/28.2 Axios/index.js' },
+    { path: '/28.3-API-Authentication/', folder: './Assignments/28.3 API Authentication/index.js' },
+    { path: '/28.4-REST-APIs/', folder: './Assignments/28.4 REST APIs/index.js' },
+    { path: '/30.1-DIY-API/', folder: './Assignments/30.1 DIY API/index.js' },
+    { path: '/33.1-PostgreSQL/', folder: './Assignments/33.1 PostgreSQL/index.js' },
+    { path: '/33.5-Family-Travel-Tracker/', folder: './Assignments/33.5 Family Travel Tracker/index.js' },
 
-    { path: '/24-Secrets-Project', folder: './Projects/Secrets Project/index.js' },
-    { path: '/25-Band-Generator-Project', folder: './Projects/Band Generator Project/index.js' },
-    { path: '/26-Blog-Application', folder: './Projects/Blog Website/index.js' },
-    { path: '/28-Secrets-Project-2', folder: './Projects/Secrets Project 2/index.js' },
-    { path: '/29-API-Project', folder: './Projects/Public API Project/index.js' },
-    { path: '/30-Blog-API', folder: './Projects/Blog API Project/index.js' },
-    { path: '/31-Permalist-Project', folder: './Projects/Permalist Project/index.js' },
-    { path: '/32-Book-Notes-Project', folder: './Projects/Book Notes Project/index.js' }
+    { path: '/24-Secrets-Project/', folder: './Projects/Secrets Project/index.js' },
+    { path: '/25-Band-Generator-Project/', folder: './Projects/Band Generator Project/index.js' },
+    { path: '/26-Blog-Application/', folder: './Projects/Blog Website/index.js' },
+    { path: '/28-Secrets-Project-2/', folder: './Projects/Secrets Project 2/index.js' },
+    { path: '/29-API-Project/', folder: './Projects/Public API Project/index.js' },
+    { path: '/30-Blog-API/', folder: './Projects/Blog API Project/index.js' },
+    { path: '/31-Permalist-Project/', folder: './Projects/Permalist Project/index.js' },
+    { path: '/32-Book-Notes-Project/', folder: './Projects/Book Notes Project/index.js' }
 ];
 
 async function loadProjects() {
