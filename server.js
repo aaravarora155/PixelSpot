@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -10,7 +11,8 @@ const port = process.env.PORT || 3000;
 app.set('strict routing', false);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));    
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname)); // Serve root assets (master.css, index.js, etc.)
 
 const projects = [
     { path: '/25.1-EJS/', folder: './Assignments/25.1 EJS Tags/index.js' },
@@ -32,6 +34,29 @@ const projects = [
     { path: '/32-Book-Notes-Project/', folder: './Projects/Book Notes Project/index.js' }
 ];
 
+// --- 1. THE STRAY REQUEST FIXER ---
+// This handles requests from sub-projects that accidentally hit the root.
+// Example: <link href="/css/style.css"> in a project will hit /css/style.css
+// Example: <form action="/check"> will hit /check
+// This middleware uses the Referer header to route them back to the correct project.
+app.use((req, res, next) => {
+    const referer = req.get('Referer');
+    if (referer) {
+        try {
+            const refUrl = new URL(referer, `http://${req.get('host')}`);
+            const project = projects.find(p => refUrl.pathname.startsWith(p.path));
+            
+            if (project && !req.url.startsWith(project.path)) {
+                // If the request doesn't have the project prefix, we try to route it to the project
+                const newPath = path.posix.join(project.path, req.url);
+                console.log(`🔀 Redirecting stray request: ${req.url} -> ${newPath} (based on Referer)`);
+                req.url = newPath;
+            }
+        } catch (e) { /* ignore safe */ }
+    }
+    next();
+});
+
 // 2. Load projects and sandbox them
 async function loadProjects() {
     for (const project of projects) {
@@ -45,6 +70,7 @@ async function loadProjects() {
             if (router) {
                 // Serve assets for this project specifically
                 app.use(project.path, express.static(projectDir));
+                app.use(project.path, express.static(path.join(projectDir, 'public')));
 
                 app.use(project.path, (req, res, next) => {
                     // SANDBOX EJS: Force the lookup to the sub-folder
@@ -69,24 +95,6 @@ async function loadProjects() {
 }
 
 await loadProjects();
-
-// --- 2. THE STRAY REQUEST CATCHER (Fixes CSS & POST routes with leading slashes) ---
-// This is a "Global Search" for CSS/Assets that dropped their prefix
-app.use((req, res, next) => {
-    // Only intercept if the request looks like a file (has a dot)
-    if (req.url.includes('.')) {
-        for (const project of projects) {
-            const projectDir = path.dirname(path.resolve(__dirname, project.folder));
-            const potentialPath = path.join(projectDir, req.url);
-            
-            // Check if the file exists in this project's folder
-            if (fs.existsSync(potentialPath)) {
-                return res.sendFile(potentialPath);
-            }
-        }
-    }
-    next();
-});
 
 // --- 3. HUB HOME & ERROR HANDLING ---
 app.get('/', (req, res) => {
