@@ -43,30 +43,28 @@ async function loadProjects() {
             const router = module.default;
 
             if (router) {
-                // 1. STATIC SERVING (Handles relative paths: css/style.css)
+                // A. STATIC ASSETS: Serve them specifically for the project path
                 app.use(project.path, express.static(projectDir, { index: false }));
 
-                // 2. THE SANDBOX & POST FIX
+                // B. THE SANDBOX: Intercepts requests to fix sub-project behavior
                 app.use(project.path, (req, res, next) => {
-                    // Fix Views
+                    // Fix Views: Override res.render so it looks in the sub-folder
                     const _render = res.render;
                     res.render = function(view, options, fn) {
                         const viewPath = path.join(projectDir, 'views', view.endsWith('.ejs') ? view : view + '.ejs');
                         return _render.call(this, viewPath, options, fn);
                     };
 
-                    // Fix POST: Force the baseUrl to include the project path
-                    // This helps Express match the routes internally
+                    // Fix Routing: Strip prefix so '/24-Secrets-Project/submit' becomes '/submit'
                     const originalUrl = req.url;
-                    req.url = req.url === '' ? '/' : req.url;
+                    req.url = (req.url === '' || req.url === '/') ? '/' : req.url;
 
                     router(req, res, (err) => {
-                        req.url = originalUrl;
+                        req.url = originalUrl; // Reset for potential next middleware
                         next(err);
                     });
                 });
-
-                console.log(`✅ Fully Proxied ${project.path}`);
+                console.log(`✅ Fully Integrated: ${project.path}`);
             }
         } catch (e) {
             console.error(`❌ Failed ${project.path}:`, e.message);
@@ -74,26 +72,43 @@ async function loadProjects() {
     }
 }
 
-// 3. THE "STRAY REQUEST" CATCHER (Fixes CSS with leading slashes)
-// Put this AFTER your loadProjects() call
+await loadProjects();
+
+// --- 2. THE STRAY REQUEST CATCHER (Fixes CSS & POST routes with leading slashes) ---
 app.use((req, res, next) => {
     const referer = req.get('Referer');
     if (referer) {
-        // Find which project the user is currently viewing
         const matchingProject = projects.find(p => referer.includes(p.path));
+        
         if (matchingProject) {
             const projectDir = path.dirname(path.resolve(__dirname, matchingProject.folder));
-            // Try to serve the file from that project's directory
-            return express.static(projectDir)(req, res, next);
+            
+            // Fix CSS/JS: If the browser asks for "/css/style.css" instead of "/project/css/style.css"
+            if (req.method === 'GET' && (req.url.includes('.') || req.url.includes('css'))) {
+                return res.sendFile(path.join(projectDir, req.url), (err) => {
+                    if (err) next(); // If file not found, continue to 404
+                });
+            }
+
+            // Fix POST: If a form submits to "/submit" instead of "/project/submit"
+            if (req.method === 'POST') {
+                // 307 Temporary Redirect preserves the POST body data
+                return res.redirect(307, matchingProject.path + req.url);
+            }
         }
     }
     next();
 });
 
-await loadProjects();
-
+// --- 3. HUB HOME & ERROR HANDLING ---
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Global Error Handler to prevent 502 Bad Gateways
+app.use((err, req, res, next) => {
+    console.error("Critical Hub Error:", err.message);
+    res.status(500).send("A project encountered an error. Check the server logs.");
 });
 
 app.listen(port, () => console.log(`🚀 Hub Online: http://localhost:${port}`));
