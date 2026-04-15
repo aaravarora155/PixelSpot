@@ -47,12 +47,38 @@ app.use((req, res, next) => {
             const project = projects.find(p => refUrl.pathname.startsWith(p.path));
             
             if (project && !req.url.startsWith(project.path)) {
-                // If the request doesn't have the project prefix, we try to route it to the project
-                const newPath = path.posix.join(project.path, req.url);
-                console.log(`🔀 Redirecting stray request: ${req.url} -> ${newPath} (based on Referer)`);
-                req.url = newPath;
+                // Fix absolute paths (e.g. /css/style.css -> /project/css/style.css)
+                req.url = path.posix.join(project.path, req.url);
             }
         } catch (e) { /* ignore safe */ }
+    }
+
+    // --- DEEP ASSET FIXER ---
+    // If a request is for a file (.css, .png, etc.) inside a project path
+    // but includes route segments (e.g. /project/submit/css/style.css),
+    // we search for the asset by stripping those segments.
+    if (req.url.includes('.') && !req.url.includes('node_modules')) {
+        const project = projects.find(p => req.url.startsWith(p.path));
+        if (project) {
+            const absolutePath = path.resolve(__dirname, project.folder);
+            const projectDir = path.dirname(absolutePath);
+            const searchFolders = [projectDir, path.join(projectDir, 'public')];
+            
+            let relPath = req.url.substring(project.path.length); // e.g. "submit/css/style.css"
+            let segments = relPath.split('/');
+            
+            while (segments.length > 0) {
+                const testPath = segments.join('/');
+                for (const folder of searchFolders) {
+                    const fullPath = path.join(folder, testPath);
+                    if (fs.existsSync(fullPath) && !fs.lstatSync(fullPath).isDirectory()) {
+                        // console.log(`🎯 Deep Asset Match: ${req.url} -> ${fullPath}`);
+                        return res.sendFile(fullPath);
+                    }
+                }
+                segments.shift(); // Strip one segment and try again
+            }
+        }
     }
     next();
 });
