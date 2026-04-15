@@ -278,6 +278,12 @@ async function dbInit(){
   await db.query("CREATE TABLE IF NOT EXISTS countries(id SERIAL PRIMARY KEY, country_code CHAR(2) NOT NULL UNIQUE, country_name VARCHAR(50) NOT NULL)");
   await db.query("CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, name VARCHAR(15) NOT NULL UNIQUE, color VARCHAR(15) NOT NULL)");
   await db.query("CREATE TABLE IF NOT EXISTS visited_countries(id SERIAL PRIMARY KEY, country_code CHAR(2) NOT NULL, user_id INTEGER REFERENCES users(id))");
+
+  // Seed default users if table is empty
+  const userCountResult = await db.query("SELECT COUNT(*) FROM users");
+  if (parseInt(userCountResult.rows[0].count) === 0) {
+    await db.query("INSERT INTO users (name, color) VALUES ('Angela', 'teal'), ('Jack', 'powderblue')");
+  }
 }
 
 async function insertCountries() {
@@ -305,7 +311,8 @@ await dbInit();
 await insertCountries();
 
 function getUser(id) {
-  return users.find((user) => user.id == id);
+  const user = users.find((user) => user.id == id);
+  return user || { id: 0, name: "Unknown", color: "grey" };
 }
 
 async function loadUsers() {
@@ -322,17 +329,24 @@ async function checkVisited(id) {
   return countries;
 }
 app.get("/", async (req, res) => {
-  loadUsers();
+  await loadUsers();
   const countries = await checkVisited(currentUserId);
+  const currentUser = getUser(currentUserId);
   res.render("index.ejs", {
     countries: countries,
     total: countries.length,
     users: users,
-    color: getUser(currentUserId).color
+    color: currentUser.color
   });
 });
 app.post("/add", async (req, res) => {
   const input = req.body["country"];
+  if (!input) {
+    await loadUsers();
+    const countries = await checkVisited(currentUserId);
+    const currentUser = getUser(currentUserId);
+    return res.render("index.ejs", { countries: countries, total: countries.length, users: users, color: currentUser.color, error: "Please enter a country name!" });
+  }
   const countries = await checkVisited(currentUserId);
 
   try {
@@ -343,9 +357,10 @@ app.post("/add", async (req, res) => {
 
     const data = result.rows[0];
     const countryCode = data.country_code;
+    const currentUser = getUser(currentUserId);
     try {
       if (countries.includes(countryCode)) {
-        res.render("index.ejs", { countries: countries, total: countries.length, users: users, color: getUser(currentUserId).color, error: "Country already visited!" });
+        res.render("index.ejs", { countries: countries, total: countries.length, users: users, color: currentUser.color, error: "Country already visited!" });
       }
       else {
         await db.query(
@@ -358,7 +373,8 @@ app.post("/add", async (req, res) => {
       console.log(err);
     }
   } catch (err) {
-    res.render("index.ejs", { countries: countries, total: countries.length, users: users, color: getUser(currentUserId).color, error: "Country not found!" });
+    const currentUser = getUser(currentUserId);
+    res.render("index.ejs", { countries: countries, total: countries.length, users: users, color: currentUser.color, error: "Country not found!" });
   }
 });
 app.post("/user", async (req, res) => {
@@ -379,21 +395,23 @@ app.post("/new", async (req, res) => {
     users.push({ id: id.rows[0].id, name: req.body.name, color: req.body.color });
     currentUserId = id.rows[0].id;
     const countries = await checkVisited(currentUserId);
+    const currentUser = getUser(currentUserId);
     res.render("index.ejs", {
       countries: countries,
       total: countries.length,
       users: users,
-      color: getUser(currentUserId).color
+      color: currentUser.color
     });
   }
   catch (err) {
     currentUserId = 1;
     const countries = await checkVisited(currentUserId);
+    const currentUser = getUser(currentUserId);
     res.render("index.ejs", {
       countries: countries,
       total: countries.length,
       users: users,
-      color: getUser(currentUserId).color
+      color: currentUser.color
     });
     //alert("User Already Added!");
   }
