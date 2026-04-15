@@ -7,14 +7,22 @@ const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  user: "postgres",
+  user: "main",
   host: "localhost",
-  database: "postgres",
-  password: "data",
+  database: "webdev_vsyb",
+  password: "ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1",
   port: 5432,
 });
 
 db.connect();
+
+async function dbInit(){
+  await db.query("DROP TABLE IF EXISTS capitals");
+  await db.query("CREATE TABLE IF NOT EXISTS capitals(id SERIAL PRIMARY KEY, country VARCHAR(100), capital VARCHAR(100))");
+  await db.query("COPY capitals FROM '.\\33.1 PostgreSQL\\capitals.csv' DELIMITER ',' CSV HEADER");
+}
+
+await dbInit();
 
 let quiz = [
   { country: "France", capital: "Paris" },
@@ -29,7 +37,6 @@ db.query("SELECT * FROM capitals", (err, res) => {
   else {
     quiz = res.rows;
   }
-  db.end();
 })
 
 let totalCorrect = 0;

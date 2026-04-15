@@ -6,10 +6,10 @@ const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  user: "postgres",
+  user: "main",
   host: "localhost",
-  database: "groceries",
-  password: "data",
+  database: "webdev_vsyb",
+  password: "ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1",
   port: 5432,
 });
 
@@ -18,6 +18,12 @@ app.use(express.static("public"));
 db.connect();
 
 let items = [];
+
+async function dbInit(){
+  await db.query("CREATE TABLE IF NOT EXISTS items(id SERIAL PRIMARY KEY, title VARCHAR(100))");
+}
+
+await dbInit();
 
 async function getItems() {
   const result = await db.query("SELECT * FROM items");

@@ -6,10 +6,10 @@ const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  user: "postgres",
+  user: "main",
   host: "localhost",
-  database: "world",
-  password: "data",
+  database: "webdev_vsyb",
+  password: "ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1",
   port: 5432,
 });
 db.connect();
@@ -23,6 +23,15 @@ let users = [
   { id: 1, name: "Angela", color: "teal" },
   { id: 2, name: "Jack", color: "powderblue" },
 ];
+async function dbInit(){
+  await db.query("DROP TABLE IF EXISTS countries");
+  await db.query("CREATE TABLE IF NOT EXISTS countries(id SERIAL PRIMARY KEY, country_code CHAR(2) NOT NULL UNIQUE, country_name VARCHAR(50) NOT NULL)");
+  await db.query("CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, name VARCHAR(15) NOT NULL UNIQUE, color VARCHAR(15) NOT NULL)");
+  await db.query("CREATE TABLE IF NOT EXISTS visited_countries(id SERIAL PRIMARY KEY, country_code CHAR(2) NOT NULL, user_id INTEGER REFERENCES users(id))");
+  await db.query("COPY countries FROM '.\\33.5 Family Travel Tracker\\countries.csv' DELIMITER ',' CSV HEADER");
+}
+
+await dbInit;
 
 function getUser(id) {
   return users.find((user) => user.id == id);
