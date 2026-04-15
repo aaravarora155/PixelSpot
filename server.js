@@ -39,16 +39,20 @@ async function loadProjects() {
             const router = module.default;
 
             if (router) {
-                // 1. FIX STATICS: This tells Express to look inside the sub-folder 
-                // whenever a request starts with the project path.
+                // 1. Static files (CSS/JS)
                 app.use(project.path, express.static(projectDir));
 
-                // 2. FIX ROUTING: This wrapper handles the "Cannot GET" by 
-                // ensuring the sub-router sees the paths it expects.
+                // 2. The Universal Adapter
                 app.use(project.path, (req, res, next) => {
-                    // This ensures that even if the sub-project isn't a 
-                    // perfect Router, it still receives the request.
+                    // This strips the prefix so the sub-project thinks it's at '/'
+                    const originalUrl = req.url;
+                    req.url = req.url === '' ? '/' : req.url; 
+                    
+                    // Call the sub-project logic
                     router(req, res, next);
+                    
+                    // Restore URL for other middleware (optional)
+                    req.url = originalUrl;
                 });
 
                 console.log(`✅ Loaded ${project.path}`);
