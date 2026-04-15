@@ -1,0 +1,55 @@
+<%- include('partials/header.ejs') %>
+
+<main class="container">
+    <div style="margin-bottom: 2rem; margin-top: 2rem;">
+        <a href="/" class="btn" style="background: rgba(255,255,255,0.1);"><i class="fa-solid fa-arrow-left"></i> Back to Vault</a>
+    </div>
+
+    <article class="view-container" style="background: var(--surface-color); padding: 3rem; border-radius: 20px; border: 1px solid var(--glass-border); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);">
+        <div style="display: flex; gap: 2.5rem; margin-bottom: 2rem; align-items: flex-start; flex-wrap: wrap;">
+            <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg" style="width: 180px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.4);" onerror="this.src='/images/placeholder.jpg'; this.onerror=null;">
+            <div style="flex: 1; min-width: 300px;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; line-height: 1.2; color: var(--text-main);"><%= book.title %></h1>
+                <h3 style="color: var(--text-muted); font-weight: 400; margin-bottom: 1.5rem;">by <%= book.author %></h3>
+                
+                <div style="display: flex; gap: 3rem; margin-bottom: 2rem; background: rgba(0,0,0,0.2); padding: 1rem 1.5rem; border-radius: 12px; display: inline-flex;">
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 1px;">Rating</div>
+                        <div class="stars" style="margin-top: 0;">
+                            <% for(let i = 1; i <= 5; i++) { %>
+                                <% if(i <= book.rating) { %>
+                                    <i class="fa-solid fa-star"></i>
+                                <% } else { %>
+                                    <i class="fa-solid fa-star empty"></i>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 1px;">Date Read</div>
+                        <div style="font-size: 1.1rem;"><i class="fa-regular fa-calendar-check" style="opacity: 0.7; margin-right: 0.3rem;"></i> 
+                            <% if(book.dateRead) { %>
+                                <%= new Date(book.dateRead).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                            <% } else { %>
+                                Unknown
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <a href="/edit/<%= book.id %>" class="btn" style="background: rgba(109, 40, 217, 0.2); color: #c4b5fd; border: 1px solid rgba(109, 40, 217, 0.3);">
+                    <i class="fa-solid fa-pen"></i> Edit Information
+                </a>
+            </div>
+        </div>
+        
+        <div style="border-top: 1px solid var(--glass-border); padding-top: 2.5rem; margin-top: 1rem;">
+            <h2 style="margin-bottom: 1.5rem; color: var(--accent-hover); display: flex; align-items: center; gap: 0.8rem;">
+                <i class="fa-solid fa-quote-left" style="opacity: 0.5;"></i> My Notes
+            </h2>
+            <div style="font-size: 1.15rem; line-height: 1.8; color: var(--text-main); white-space: pre-wrap; font-weight: 300; background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px;"><%= book.notes %></div>
+        </div>
+    </article>
+</main>
+
+<%- include('partials/footer.ejs') %>

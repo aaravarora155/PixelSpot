@@ -1,0 +1,53 @@
+<%- include('partials/header.ejs') %>
+
+<main class="container">
+    <div class="edit-container" style="background: var(--surface-color); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border); max-width: 600px; margin: 0 auto; margin-top: 2rem;">
+        <h2 style="margin-bottom: 1.5rem;">Edit Book Notes</h2>
+        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+            <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg" style="width: 80px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);" onerror="this.src='/images/placeholder.jpg'; this.onerror=null;">
+            <div>
+                <h3><%= book.title %></h3>
+                <p style="color: var(--text-muted);">by <%= book.author %></p>
+            </div>
+        </div>
+
+        <form action="/edit/<%= book.id %>" method="POST">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);"><i class="fa-solid fa-star" style="color: var(--star-filled)"></i> Rating (1-5):</label>
+                <input type="number" name="rating" min="1" max="5" value="<%= book.rating %>" class="search-input" style="width: 100%;">
+            </div>
+            
+            <% 
+                // Format date for the input
+                let formattedDate = new Date().toISOString().split('T')[0]; // fallback
+                if(book.dateRead) {
+                    try {
+                        formattedDate = new Date(book.dateRead).toISOString().split('T')[0];
+                    } catch(e) {}
+                }
+            %>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);"><i class="fa-regular fa-calendar-check"></i> Date Read:</label>
+                <input type="date" name="dateRead" value="<%= formattedDate %>" class="search-input" style="width: 100%;">
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);"><i class="fa-solid fa-pen"></i> Notes:</label>
+                <textarea name="notes" class="search-input" style="width: 100%; height: 180px; resize: vertical; line-height: 1.6;"><%= book.notes || '' %></textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn" style="flex: 1;"><i class="fa-solid fa-save"></i> Save Changes</button>
+                <a href="/" class="btn" style="background: rgba(255,255,255,0.1); flex: 1; text-align: center; justify-content: center;">Cancel</a>
+            </div>
+        </form>
+
+        <form action="/delete/<%= book.id %>" method="POST" style="margin-top: 2rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 1.5rem;">
+            <button type="submit" class="btn" style="background: rgba(220, 38, 38, 0.1); color: #fca5a5; width: 100%; border: 1px solid rgba(220, 38, 38, 0.3); justify-content: center;">
+                <i class="fa-solid fa-trash"></i> Delete Book
+            </button>
+        </form>
+    </div>
+</main>
+
+<%- include('partials/footer.ejs') %>

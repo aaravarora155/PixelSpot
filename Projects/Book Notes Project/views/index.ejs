@@ -1,0 +1,87 @@
+<%- include('partials/header.ejs') %>
+
+<main>
+    <section class="controls-section">
+        <!-- Add by ISBN Form -->
+        <form action="/add" method="POST" class="search-form">
+            <input 
+                type="text" 
+                name="isbn" 
+                placeholder="Find and add a book by ISBN..." 
+                class="search-input"
+                required
+                pattern="\d{10}|\d{13}"
+                title="Please enter a valid 10 or 13 digit ISBN"
+            >
+            <button type="submit" class="btn">
+                <i class="fa-solid fa-plus"></i> Search & Add
+            </button>
+        </form>
+
+        <!-- Sorting Controls -->
+        <div class="sort-controls">
+            <label for="sort"><i class="fa-solid fa-arrow-down-a-z"></i> Sort by:</label>
+            <select id="sort" name="sort" class="sort-select" onchange="window.location.href='/sort/' + this.value">
+                <option value="recency" <%= typeof currentSort !== 'undefined' && currentSort === 'recency' ? 'selected' : '' %>>Recency</option>
+                <option value="rating" <%= typeof currentSort !== 'undefined' && currentSort === 'rating' ? 'selected' : '' %>>Rating</option>
+                <option value="title" <%= typeof currentSort !== 'undefined' && currentSort === 'title' ? 'selected' : '' %>>Title</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="book-grid">
+        <% if (typeof books !== 'undefined' && books.length > 0) { %>
+            <% books.forEach(book => { %>
+                <article class="book-tile">
+                    <div class="book-header">
+                        <!-- Try to show book cover, otherwise utilize a local placeholder -->
+                        <img 
+                            src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg" 
+                            alt="<%= book.title %> Cover" 
+                            class="book-cover"
+                            onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
+                        >
+                        <div class="book-info">
+                            <h2 class="book-title"><%= book.title %></h2>
+                            <div class="book-author">by <%= book.author || 'Unknown Author' %></div>
+                            <div class="stars">
+                                <% for(let i = 1; i <= 5; i++) { %>
+                                    <% if(i <= book.rating) { %>
+                                        <i class="fa-solid fa-star"></i>
+                                    <% } else { %>
+                                        <i class="fa-solid fa-star empty"></i>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                            <div class="book-meta">
+                                <i class="fa-regular fa-calendar-check"></i> Read: <%= new Date(book.dateRead).toLocaleDateString() %>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-notes">
+                        <%= book.notes %>
+                    </div>
+                    
+                    <div class="book-actions">
+                        <a href="/view/<%= book.id %>" class="action-btn btn-view">
+                            <i class="fa-solid fa-eye"></i> View
+                        </a>
+                        <a href="/edit/<%= book.id %>" class="action-btn btn-edit">
+                            <i class="fa-solid fa-pen"></i> Edit
+                        </a>
+                    </div>
+                </article>
+            <% }); %>
+        <% } else { %>
+            <!-- Show when empty -->
+            <div class="empty-state">
+                <i class="fa-solid fa-book-open-reader"></i>
+                <h3>No books logged yet</h3>
+                <p>Use the search bar above to add your first book by its ISBN!</p>
+            </div>
+        <% } %>
+    </section>
+</main>
+
+<%- include('partials/footer.ejs') %>
