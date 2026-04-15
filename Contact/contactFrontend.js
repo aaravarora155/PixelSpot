@@ -16,8 +16,6 @@ $("button").click(async function() {
     const issue = $(".issueText").val();
 
     if (valid(email)===true && checkLength(name)===true && checkLength(issue)===true){
-        
-        alert("Request Sent, Copy has been sent to the email you entered!");
         $(".user").val("");
         $(".emailEntered").val("");
         $(".issueText").val("");
