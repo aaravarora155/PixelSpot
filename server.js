@@ -9,6 +9,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.set('strict routing', false);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));    
+
 const projects = [
     { path: '/25.1-EJS/', folder: './Assignments/25.1 EJS Tags/index.js' },
     { path: '/28.1-JSON/', folder: './Assignments/28.1 JSON/index.js' },
@@ -40,38 +43,52 @@ async function loadProjects() {
             const router = module.default;
 
             if (router) {
-                // 1. STATIC FIX: High-priority static serving
+                // 1. STATIC SERVING (Handles relative paths: css/style.css)
                 app.use(project.path, express.static(projectDir, { index: false }));
 
-                // 2. SANDBOX MIDDLEWARE
+                // 2. THE SANDBOX & POST FIX
                 app.use(project.path, (req, res, next) => {
-                    // Fix "Confusing projects" - Override the render function
+                    // Fix Views
                     const _render = res.render;
                     res.render = function(view, options, fn) {
-                        const projectViews = path.join(projectDir, 'views');
-                        // Force Express to look in the specific project folder
-                        if (typeof options === 'function') { fn = options; options = {}; }
-                        const viewPath = path.join(projectViews, view.endsWith('.ejs') ? view : view + '.ejs');
+                        const viewPath = path.join(projectDir, 'views', view.endsWith('.ejs') ? view : view + '.ejs');
                         return _render.call(this, viewPath, options, fn);
                     };
 
-                    // Fix POST routes - Strip prefix so /project/submit becomes /submit
+                    // Fix POST: Force the baseUrl to include the project path
+                    // This helps Express match the routes internally
                     const originalUrl = req.url;
                     req.url = req.url === '' ? '/' : req.url;
 
                     router(req, res, (err) => {
-                        req.url = originalUrl; // Restore for next middleware
+                        req.url = originalUrl;
                         next(err);
                     });
                 });
 
-                console.log(`✅ Sandboxed ${project.path}`);
+                console.log(`✅ Fully Proxied ${project.path}`);
             }
         } catch (e) {
             console.error(`❌ Failed ${project.path}:`, e.message);
         }
     }
 }
+
+// 3. THE "STRAY REQUEST" CATCHER (Fixes CSS with leading slashes)
+// Put this AFTER your loadProjects() call
+app.use((req, res, next) => {
+    const referer = req.get('Referer');
+    if (referer) {
+        // Find which project the user is currently viewing
+        const matchingProject = projects.find(p => referer.includes(p.path));
+        if (matchingProject) {
+            const projectDir = path.dirname(path.resolve(__dirname, matchingProject.folder));
+            // Try to serve the file from that project's directory
+            return express.static(projectDir)(req, res, next);
+        }
+    }
+    next();
+});
 
 await loadProjects();
 
