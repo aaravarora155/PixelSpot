@@ -3,15 +3,15 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import axios from "axios";
 
-const app = express();
+const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "world",
-  password: "data",
-  port: 5432,
+    user: "postgres",
+    host: "localhost",
+    database: "world",
+    password: "data",
+    port: 5432,
 });
 db.connect();
 
@@ -48,7 +48,7 @@ async function getBooks() {
     } else if (currentSort === "title") {
         orderClause = "ORDER BY title ASC";
     }
-    
+
     const result = await db.query(`SELECT id, isbn, title, author, rating, notes, date_read AS "dateRead" FROM books ${orderClause}`);
     return result.rows;
 }
@@ -94,7 +94,7 @@ app.post("/add", async (req, res) => {
                 "INSERT INTO books (isbn, title, author, rating, notes) VALUES ($1, $2, $3, $4, $5) RETURNING id",
                 [isbn, title, author, 1, "Enter your notes here..."]
             );
-            
+
             // Redirect to edit page
             res.redirect(`/edit/${result.rows[0].id}`);
         } else {
@@ -126,7 +126,7 @@ app.post("/edit/:id", async (req, res) => {
     const id = req.params.id;
     const { rating, notes, dateRead } = req.body;
     try {
-         await db.query(
+        await db.query(
             "UPDATE books SET rating = $1, notes = $2, date_read = $3 WHERE id = $4",
             [rating, notes, dateRead, id]
         );
@@ -163,6 +163,4 @@ app.post("/delete/:id", async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+export default app;

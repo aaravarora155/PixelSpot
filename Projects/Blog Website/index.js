@@ -2,7 +2,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 
-const app = express();
+const app = express.Router();
 const port = 3000;
 
 app.use(express.static("public"));
@@ -12,7 +12,7 @@ let authors = [];
 let titles = [];
 let posts = [];
 
-function storeFile(name,title,body) {
+function storeFile(name, title, body) {
     authors.push(name);
     titles.push(title);
     posts.push(body);
@@ -29,30 +29,30 @@ app.post("/submit", (req, res) => {
     const title = req.body["title"];
     const body = req.body["bodyPost"];
     storeFile(name, title, body);
-    res.render("index.ejs",{"authors":authors,"titles":titles});
+    res.render("index.ejs", { "authors": authors, "titles": titles });
 })
 app.post("/edit", (req, res) => {
     const title = req.body["title"];
     const body = req.body["bodyPost"];
 
-    titles.forEach(title1=>{
-        if (title1===title) {
+    titles.forEach(title1 => {
+        if (title1 === title) {
             const index = titles.indexOf(title1);
             posts[index] = body;
-            res.render("index.ejs", {"message": "<p>Edited Successfully!</p>", "type": true});
+            res.render("index.ejs", { "message": "<p>Edited Successfully!</p>", "type": true });
         }
     })
 })
 app.post("/view", (req, res) => {
     const title = req.body["title"];
 
-    titles.forEach(title1=>{
+    titles.forEach(title1 => {
 
-        if (title1===title){
-            const index= titles.indexOf(title1);
+        if (title1 === title) {
+            const index = titles.indexOf(title1);
 
-            const post= `<h3>${titles[index]}</h3><p>Written by: ${authors[index]}</p><p>Post: ${posts[index]}<p>`;
-            res.render("index.ejs",{"message":post,"type":true})
+            const post = `<h3>${titles[index]}</h3><p>Written by: ${authors[index]}</p><p>Post: ${posts[index]}<p>`;
+            res.render("index.ejs", { "message": post, "type": true })
         }
     })
 
@@ -61,16 +61,14 @@ app.post("/view", (req, res) => {
 app.post("/delete", (req, res) => {
     const title = req.body["title"];
 
-    titles.forEach(title1=>{
-        if (title1===title){
-            const index= titles.indexOf(title1);
-            posts.splice(index,1);
-            titles.splice(index,1);
-            authors.splice(index,1);
-            res.render("index.ejs",{"message":"<p>Deleted Successfully!<p/>","type":true})
+    titles.forEach(title1 => {
+        if (title1 === title) {
+            const index = titles.indexOf(title1);
+            posts.splice(index, 1);
+            titles.splice(index, 1);
+            authors.splice(index, 1);
+            res.render("index.ejs", { "message": "<p>Deleted Successfully!<p/>", "type": true })
         }
     })
 })
-app.listen(port, () => {
-    console.log("Server running on port " + port);
-})
+export default app;

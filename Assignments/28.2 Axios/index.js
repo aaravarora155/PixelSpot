@@ -3,7 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import axios from "axios";
 
-const app = express();
+const app = express.Router();
 const port = 3000;
 
 app.use(express.static("public"));
@@ -36,22 +36,20 @@ app.post("/", async (req, res) => {
   // Step 3: If you get a 404 error (resource not found) from the API request.
   // Pass an error to the index.ejs to tell the user:
   // "No activities that match your criteria."
-    try{
-        const type=req.body.type;
-        const participants=req.body.participants;
-        const urlString=`https://bored-api.appbrewery.com/filter?type=${type}&participants=${participants}`
-        const response=await axios.get(urlString);
+  try {
+    const type = req.body.type;
+    const participants = req.body.participants;
+    const urlString = `https://bored-api.appbrewery.com/filter?type=${type}&participants=${participants}`
+    const response = await axios.get(urlString);
 
-        const result=response.data;
-        const randomActivityIndex=Math.floor(Math.random()*result.length);
-        const randomActivity=result[randomActivityIndex];
-        res.render("index.ejs", { data: randomActivity });
-    }
-    catch(error){
-        res.render("index.ejs");
-    }
+    const result = response.data;
+    const randomActivityIndex = Math.floor(Math.random() * result.length);
+    const randomActivity = result[randomActivityIndex];
+    res.render("index.ejs", { data: randomActivity });
+  }
+  catch (error) {
+    res.render("index.ejs");
+  }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port: ${port}`);
-});
+export default app;

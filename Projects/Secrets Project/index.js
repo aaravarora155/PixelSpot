@@ -1,7 +1,7 @@
 //Install packages using: npm i body-parser express
 //Run website on localhost:3000
 import express from "express";
-const app = express();
+const app = express.Router();
 const port = 3000;
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -23,6 +23,4 @@ app.post("/check", (req, res) => {
         res.sendFile(__dirname + "/public/index");
     }
 })
-app.listen(port, () => {
-    console.log("Server is running on port: " + port);
-})
+export default app;

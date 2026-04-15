@@ -3,7 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg"
 
-const app = express();
+const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
@@ -26,7 +26,7 @@ db.query("SELECT * FROM capitals", (err, res) => {
   if (err) {
     console.error("Error executing query", err.stack);
   }
-  else{
+  else {
     quiz = res.rows;
   }
   db.end();
@@ -72,6 +72,4 @@ async function nextQuestion() {
   currentQuestion = randomCountry;
 }
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+export default app;

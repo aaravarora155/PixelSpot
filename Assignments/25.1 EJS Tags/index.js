@@ -1,6 +1,6 @@
 //Install packages using: npm i ejs express
 import express from "express";
-const app = express();
+const app = express.Router();
 const port = 3000;
 
 app.get("/", (req, res) => {
@@ -13,6 +13,4 @@ app.get("/", (req, res) => {
   res.render("index.ejs", data);
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+export default app;

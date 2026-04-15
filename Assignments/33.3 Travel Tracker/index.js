@@ -3,7 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg"
 
-const app = express();
+const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
@@ -51,15 +51,13 @@ app.post("/add", async (req, res) => {
     getVisitInfo();
     res.redirect("/");
   }
-  else if (data.rows.length==0){
+  else if (data.rows.length == 0) {
     res.render("index.ejs", { countries: visitedCountries, total: numVisited, error: "Country not found!" });
   }
-  else if (visitedCountries.includes(data.rows[0].country_code)){
+  else if (visitedCountries.includes(data.rows[0].country_code)) {
     res.render("index.ejs", { countries: visitedCountries, total: numVisited, error: "Country already visited!" });
   }
-  
+
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+export default app;
