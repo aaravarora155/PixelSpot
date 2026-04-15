@@ -109,12 +109,14 @@ async function dbInit(){
 
 async function insertCountries() {
   try {
-    await db.connect();
-    console.log("Connected to database.");
-
     for (const item of countries) {
-      const query = "INSERT INTO countries (id, country, capital) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING;";
-      const values = [item.id, item.country, item.capital];
+      // In this file, countries is an array of arrays: [id, country, capital]
+      const query = `
+        INSERT INTO capitals (id, country, capital) 
+        VALUES ($1, $2, $3) 
+        ON CONFLICT (id) DO NOTHING;
+      `;
+      const values = [item[0], item[1], item[2]];
       
       await db.query(query, values);
     }
@@ -122,8 +124,6 @@ async function insertCountries() {
     console.log("All values inserted successfully!");
   } catch (err) {
     console.error("Error during insertion:", err);
-  } finally {
-    await db.end();
   }
 }
 

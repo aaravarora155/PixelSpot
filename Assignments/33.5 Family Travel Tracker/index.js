@@ -282,9 +282,6 @@ async function dbInit(){
 
 async function insertCountries() {
   try {
-    await db.connect();
-    console.log("Connected to database.");
-
     for (const item of countries) {
       // Mapping 'code' to country_code and 'name' to country_name 
       // based on your defined list format
@@ -301,12 +298,10 @@ async function insertCountries() {
     console.log("All values inserted successfully!");
   } catch (err) {
     console.error("Error during insertion:", err);
-  } finally {
-    await db.end();
   }
 }
 
-await dbInit;
+await dbInit();
 await insertCountries();
 
 function getUser(id) {
