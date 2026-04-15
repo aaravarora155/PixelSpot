@@ -49,7 +49,7 @@ app.post("/add", async (req, res) => {
   if (data.rows.length > 0 && !visitedCountries.includes(data.rows[0].country_code)) {
     await db.query("INSERT INTO visited_countries (country_code) VALUES ($1)", [data.rows[0].country_code]);
     getVisitInfo();
-    res.redirect("/");
+    res.redirect("./");
   }
   else if (data.rows.length == 0) {
     res.render("index.ejs", { countries: visitedCountries, total: numVisited, error: "Country not found!" });

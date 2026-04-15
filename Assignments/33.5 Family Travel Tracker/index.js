@@ -6,7 +6,7 @@ const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  connectionString:"postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
+  connectionString:process.env.PG_CONNECTION_STRING || "postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
   ssl:{
     rejectUnauthorized: false
   }
@@ -80,7 +80,7 @@ app.post("/add", async (req, res) => {
           "INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2)",
           [countryCode, currentUserId]
         );
-        res.redirect("/");
+        res.redirect("./");
       }
     } catch (err) {
       console.log(err);
@@ -92,7 +92,7 @@ app.post("/add", async (req, res) => {
 app.post("/user", async (req, res) => {
   if (req.body.add == undefined) {
     currentUserId = req.body.user;
-    res.redirect("/");
+    res.redirect("./");
   }
   else {
     res.render("new.ejs");

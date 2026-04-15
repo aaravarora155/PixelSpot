@@ -7,7 +7,7 @@ const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  connectionString:"postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
+  connectionString:process.env.PG_CONNECTION_STRING || "postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
   ssl:{
     rejectUnauthorized: false
   }
@@ -67,7 +67,7 @@ app.get("/sort/:sort", (req, res) => {
     if (validSorts.includes(req.params.sort)) {
         currentSort = req.params.sort;
     }
-    res.redirect("/");
+    res.redirect("./");
 });
 
 app.post("/add", async (req, res) => {
@@ -77,7 +77,7 @@ app.post("/add", async (req, res) => {
         const checkResult = await db.query("SELECT * FROM books WHERE isbn = $1", [isbn]);
         if (checkResult.rows.length > 0) {
             // Already added
-            return res.redirect("/");
+            return res.redirect("./");
         }
 
         // Fetch from OpenLibrary
@@ -98,11 +98,11 @@ app.post("/add", async (req, res) => {
             res.redirect(`/edit/${result.rows[0].id}`);
         } else {
             console.log("Book not found on OpenLibrary");
-            res.redirect("/"); // Consider adding error handling/flash messages in UI later
+            res.redirect("./"); // Consider adding error handling/flash messages in UI later
         }
     } catch (error) {
         console.log("Error adding book:", error.message);
-        res.redirect("/");
+        res.redirect("./");
     }
 });
 
@@ -113,11 +113,11 @@ app.get("/edit/:id", async (req, res) => {
         if (result.rows.length > 0) {
             res.render("edit.ejs", { book: result.rows[0] });
         } else {
-            res.redirect("/");
+            res.redirect("./");
         }
     } catch (err) {
         console.log(err);
-        res.redirect("/");
+        res.redirect("./");
     }
 });
 
@@ -129,10 +129,10 @@ app.post("/edit/:id", async (req, res) => {
             "UPDATE books SET rating = $1, notes = $2, date_read = $3 WHERE id = $4",
             [rating, notes, dateRead, id]
         );
-        res.redirect("/");
+        res.redirect("./");
     } catch (err) {
         console.log(err);
-        res.redirect("/");
+        res.redirect("./");
     }
 });
 
@@ -143,11 +143,11 @@ app.get("/view/:id", async (req, res) => {
         if (result.rows.length > 0) {
             res.render("view.ejs", { book: result.rows[0] });
         } else {
-            res.redirect("/");
+            res.redirect("./");
         }
     } catch (err) {
         console.log(err);
-        res.redirect("/");
+        res.redirect("./");
     }
 });
 
@@ -155,10 +155,10 @@ app.post("/delete/:id", async (req, res) => {
     const id = req.params.id;
     try {
         await db.query("DELETE FROM books WHERE id = $1", [id]);
-        res.redirect("/");
+        res.redirect("./");
     } catch (err) {
         console.log(err);
-        res.redirect("/");
+        res.redirect("./");
     }
 });
 

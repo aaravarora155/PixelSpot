@@ -1,4 +1,5 @@
 import express from 'express';
+import 'dotenv/config';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
@@ -43,8 +44,18 @@ app.use((req, res, next) => {
     if (referer) {
         try {
             const refUrl = new URL(referer, `http://${req.get('host')}`);
-            const project = projects.find(p => refUrl.pathname.startsWith(p.path));
+            const project = projects.find(p => {
+                const pPath = p.path.endsWith('/') ? p.path : p.path + '/';
+                const rPath = refUrl.pathname.endsWith('/') ? refUrl.pathname : refUrl.pathname + '/';
+                return rPath.startsWith(pPath);
+            });
             
+            if (project && req.url === '/') {
+                // If we hit root but came from a project, go back to project root
+                console.log(`🏠 Fixing stray root request from ${project.path}`);
+                return res.redirect(307, project.path);
+            }
+
             if (project && !req.url.startsWith(project.path)) {
                 // Fix absolute paths (e.g. /css/style.css -> /project/css/style.css)
                 const newPath = path.posix.join(project.path, req.url);

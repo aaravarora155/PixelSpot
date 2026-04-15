@@ -41,7 +41,7 @@ app.post("/add", async (req, res) => {
   // items.push({title: item});
   try {
     await db.query("INSERT INTO items (title) VALUES ($1)", [item]);
-    res.redirect("/");
+    res.redirect("./");
   } catch (err) {
     console.log(err);
   }
@@ -53,7 +53,7 @@ app.post("/edit", async (req, res) => {
 
   try {
     await db.query("UPDATE items SET title = ($1) WHERE id = $2", [item, id]);
-    res.redirect("/");
+    res.redirect("./");
   } catch (err) {
     console.log(err);
   }
@@ -63,7 +63,7 @@ app.post("/delete", async (req, res) => {
   const id = req.body.deleteItemId;
   try {
     await db.query("DELETE FROM items WHERE id = $1", [id]);
-    res.redirect("/");
+    res.redirect("./");
   } catch (err) {
     console.log(err);
   }

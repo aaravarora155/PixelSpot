@@ -6,7 +6,7 @@ const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  connectionString:"postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
+  connectionString:process.env.PG_CONNECTION_STRING || "postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
   ssl:{
     rejectUnauthorized: false
   }
@@ -41,20 +41,20 @@ app.post("/add", async (req, res) => {
   const item = req.body.newItem;
   const id = await db.query("INSERT INTO items (title) VALUES ($1) RETURNING id", [item]);
   items.push({ id: id.rows[0].id, title: item });
-  res.redirect("/");
+  res.redirect("./");
 });
 
 app.post("/edit", async (req, res) => {
   const id = req.body.updatedItemId;
   await db.query("UPDATE items SET title = $1 WHERE id = $2", [req.body.updatedItemTitle, id]);
   await getItems();
-  res.redirect("/");
+  res.redirect("./");
 });
 
 app.post("/delete", async (req, res) => {
   const id = req.body.deleteItemId;
   await db.query("DELETE FROM items WHERE id = $1", [id]);
-  res.redirect("/");
+  res.redirect("./");
 });
 
 export default app;

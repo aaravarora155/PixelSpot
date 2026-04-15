@@ -7,7 +7,7 @@
     <body>
         <div id="header">
             <h1>Home</h1>
-            <form action="/create" method="POST">
+            <form action="create" method="POST">
                 <input id="create" type="submit" value="Create Post">
             </form>
         </div>
@@ -20,7 +20,7 @@
             </div>
         <%}%>
         <div id="form">
-            <form class="buttonPan" method="POST" action="/options">
+            <form class="buttonPan" method="POST" action="options">
                 <div id="title">
                     <label>Title</label>
                     <input type="text" name="title" placeholder="Enter Title" required>
@@ -30,9 +30,9 @@
                     <br>
                 </div>
                 <div id="buttons">
-                    <input id="edit" type="submit" value="Edit" formaction="/edit">
-                    <input id="view" type="submit" value="View" formaction="/view">
-                    <input id="delete" type="submit" value="Delete" formaction="/delete">
+                    <input id="edit" type="submit" value="Edit" formaction="edit">
+                    <input id="view" type="submit" value="View" formaction="view">
+                    <input id="delete" type="submit" value="Delete" formaction="delete">
                 </div>
 
             </form>

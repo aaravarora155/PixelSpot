@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <form class="tab-view tab-view-height-auto" action="/user" method="post">
+  <form class="tab-view tab-view-height-auto" action="user" method="post">
     <% users.forEach(function(user) { %>
       <input type="submit" name="user" value="<%= user.id %>" id="<%= user.id %>">
       <label for="<%= user.id %>" style="background-color: <%= user.color %>;">
@@ -22,7 +22,7 @@
 
   </form>
 
-  <form action="/add" method="post">
+  <form action="add" method="post">
     <input type="text" name="country" autofocus placeholder="<%= locals.error ? error :  'Enter country name'%>">
     <button type="submit" style="background-color: <%= color %>;">Add</button>
   </form>

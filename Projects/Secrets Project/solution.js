@@ -29,7 +29,7 @@ app.post("/check", (req, res) => {
     res.sendFile(__dirname + "/public/secret");
   } else {
     res.sendFile(__dirname + "/public/index");
-    //Alternatively res.redirect("/");
+    //Alternatively res.redirect("./");
   }
 });
 

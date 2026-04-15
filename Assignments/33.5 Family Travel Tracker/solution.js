@@ -69,7 +69,7 @@ app.post("/add", async (req, res) => {
         "INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2)",
         [countryCode, currentUserId]
       );
-      res.redirect("/");
+      res.redirect("./");
     } catch (err) {
       console.log(err);
     }
@@ -83,7 +83,7 @@ app.post("/user", async (req, res) => {
     res.render("new.ejs");
   } else {
     currentUserId = req.body.user;
-    res.redirect("/");
+    res.redirect("./");
   }
 });
 
@@ -99,7 +99,7 @@ app.post("/new", async (req, res) => {
   const id = result.rows[0].id;
   currentUserId = id;
 
-  res.redirect("/");
+  res.redirect("./");
 });
 
 app.listen(port, () => {

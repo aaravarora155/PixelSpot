@@ -30,7 +30,7 @@ app.post("/recipe", (req, res) => {
     default:
       break;
   }
-  res.redirect("/");
+  res.redirect("./");
 });
 
 app.listen(port, () => {

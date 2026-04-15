@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 const app = express.Router();
 const port = 3000;
 const API_URL = "https://api.openuv.io/api/v1/uv";
-const API_KEY = "openuv-4ms52rmk155s4o-io";
+const API_KEY = process.env.OPENUV_API_KEY || process.env.OPENUV_API_KEY || "openuv-4ms52rmk155s4o-io";
 
 const options = {
     headers: { "x-access-token": API_KEY }

@@ -34,7 +34,7 @@ app.post("/recipe", (req, res) => {
       recipes = JSON.parse(recipeJSON)[2];
       break;
   }
-  res.redirect("/");
+  res.redirect("./");
 });
 
 export default app;

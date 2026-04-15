@@ -47,7 +47,7 @@ app.post("/api/posts", async (req, res) => {
   try {
     const response = await axios.post(`${API_URL}/posts`, req.body);
     console.log(response.data);
-    res.redirect("/");
+    res.redirect("./");
   } catch (error) {
     res.status(500).json({ message: "Error creating post" });
   }
@@ -62,7 +62,7 @@ app.post("/api/posts/:id", async (req, res) => {
       req.body
     );
     console.log(response.data);
-    res.redirect("/");
+    res.redirect("./");
   } catch (error) {
     res.status(500).json({ message: "Error updating post" });
   }
@@ -72,7 +72,7 @@ app.post("/api/posts/:id", async (req, res) => {
 app.get("/api/posts/delete/:id", async (req, res) => {
   try {
     await axios.delete(`${API_URL}/posts/${req.params.id}`);
-    res.redirect("/");
+    res.redirect("./");
   } catch (error) {
     res.status(500).json({ message: "Error deleting post" });
   }
