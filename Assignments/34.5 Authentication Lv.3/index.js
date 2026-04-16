@@ -6,6 +6,9 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy } from "passport-local";
 import GoogleStrategy from "passport-google-oauth2";
+import env from "dotenv";
+
+env.config();
 
 const app = express.Router();;
 const port = 3000;
@@ -103,9 +106,9 @@ app.post("/login",
 );
 
 passport.use("google", new GoogleStrategy({
-  clientID: "105816395356-ln9jjkgpblend8vsj0jq0t64aakn2rlt.apps.googleusercontent.com",
-  clientSecret: "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",
-  callbackURL: "https://pixelspot.onrender.com/34.5-Authentication-Lv.3/auth/google/secrets",
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL,
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
 }, async (accessToken, refreshToken, profile, cb) => {
   try {
