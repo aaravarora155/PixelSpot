@@ -67,7 +67,7 @@ app.get("/sort/:sort", (req, res) => {
     if (validSorts.includes(req.params.sort)) {
         currentSort = req.params.sort;
     }
-    res.redirect("./");
+    res.redirect(req.baseUrl);
 });
 
 app.post("/add", async (req, res) => {
@@ -77,7 +77,7 @@ app.post("/add", async (req, res) => {
         const checkResult = await db.query("SELECT * FROM books WHERE isbn = $1", [isbn]);
         if (checkResult.rows.length > 0) {
             // Already added
-            return res.redirect("./");
+            return res.redirect(req.baseUrl);
         }
 
         // Fetch from OpenLibrary
@@ -95,14 +95,14 @@ app.post("/add", async (req, res) => {
             );
 
             // Redirect to edit page
-            res.redirect(`./editPage/${result.rows[0].id}`);
+            res.redirect(`${req.baseUrl}/editPage/${result.rows[0].id}`);
         } else {
             console.log("Book not found on OpenLibrary");
-            res.redirect("./"); // Consider adding error handling/flash messages in UI later
+            res.redirect(req.baseUrl); // Consider adding error handling/flash messages in UI later
         }
     } catch (error) {
         console.log("Error adding book:", error.message);
-        res.redirect("./");
+        res.redirect(req.baseUrl);
     }
 });
 
@@ -113,11 +113,11 @@ app.get("/editPage/:id", async (req, res) => {
         if (result.rows.length > 0) {
             res.render("edit.ejs", { book: result.rows[0] });
         } else {
-            res.redirect("./");
+            res.redirect(req.baseUrl);
         }
     } catch (err) {
         console.log(err);
-        res.redirect("./");
+        res.redirect(req.baseUrl);
     }
 });
 
@@ -129,10 +129,10 @@ app.post("/edit/:id", async (req, res) => {
             "UPDATE books SET rating = $1, notes = $2, date_read = $3 WHERE id = $4",
             [rating, notes, dateRead, id]
         );
-        res.redirect("./");
+        res.redirect(req.baseUrl);
     } catch (err) {
         console.log(err);
-        res.redirect("./");
+        res.redirect(req.baseUrl);
     }
 });
 
@@ -143,11 +143,11 @@ app.get("/view/:id", async (req, res) => {
         if (result.rows.length > 0) {
             res.render("view.ejs", { book: result.rows[0] });
         } else {
-            res.redirect("./");
+            res.redirect(req.baseUrl);
         }
     } catch (err) {
         console.log(err);
-        res.redirect("./");
+        res.redirect(req.baseUrl);
     }
 });
 
@@ -155,10 +155,10 @@ app.post("/delete/:id", async (req, res) => {
     const id = req.params.id;
     try {
         await db.query("DELETE FROM books WHERE id = $1", [id]);
-        res.redirect("./");
+        res.redirect(req.baseUrl);
     } catch (err) {
         console.log(err);
-        res.redirect("./");
+        res.redirect(req.baseUrl);
     }
 });
 
