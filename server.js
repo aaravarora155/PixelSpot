@@ -32,7 +32,8 @@ const projects = [
     { path: '/29-API-Project/', folder: './Projects/Public API Project/index.js' },
     { path: '/30-Blog-API/', folder: './Projects/Blog API Project/index.js' },
     { path: '/31-Permalist-Project/', folder: './Projects/Permalist Project/index.js' },
-    { path: '/32-Book-Notes-Project/', folder: './Projects/Book Notes Project/index.js' }
+    { path: '/32-Book-Notes-Project/', folder: './Projects/Book Notes Project/index.js' },
+    { path: '/contact/', folder: './Contact/contactBackend.js'}
 ];
 
 // --- 1. THE STRAY REQUEST FIXER ---

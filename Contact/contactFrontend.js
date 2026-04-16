@@ -19,7 +19,7 @@ $("button").click(async function() {
         $(".user").val("");
         $(".emailEntered").val("");
         $(".issueText").val("");
-        const response = await fetch("https://trotty-inexpressively-rosette.ngrok-free.dev/send-email", {
+        const response = await fetch("https://pixelspot.onrender.com/contact/send-email", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, issue })
