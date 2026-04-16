@@ -19,13 +19,18 @@ $("button").click(async function() {
         $(".user").val("");
         $(".emailEntered").val("");
         $(".issueText").val("");
-        const response = await fetch("https://pixelspot.onrender.com/contact/send-email", {
+        const response = await fetch("/contact/send-email", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, issue })
         });
 
         const data = await response.json();
+        if (data.success) {
+            alert("Email sent successfully!");
+        } else {
+            alert("Error: " + data.message);
+        }
     }
     else{
         alert("Please enter a valid email address and ensure all fields are filled.");
