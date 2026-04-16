@@ -10,7 +10,7 @@ import env from "dotenv";
 
 env.config();
 
-const app = express.Router();;
+const app = express.Router();
 const port = 3000;
 const saltRounds = 10;
 
