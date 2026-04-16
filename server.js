@@ -58,7 +58,7 @@ app.use((req, res, next) => {
                 return res.redirect(307, project.path);
             }
 
-            if (project && !req.url.startsWith(project.path)) {
+            if (project && !req.url.startsWith(project.path) && !req.url.startsWith(project.path.slice(0, -1))) {
                 // Fix absolute paths (e.g. /css/style.css -> /project/css/style.css)
                 const newPath = path.posix.join(project.path, req.url);
                 
