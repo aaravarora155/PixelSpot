@@ -106,7 +106,7 @@ app.post("/add", async (req, res) => {
     }
 });
 
-app.get("/edit/:id", async (req, res) => {
+app.get("/editPage/:id", async (req, res) => {
     const id = req.params.id;
     try {
         const result = await db.query("SELECT id, isbn, title, author, rating, notes, date_read AS \"dateRead\" FROM books WHERE id = $1", [id]);
