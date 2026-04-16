@@ -11,13 +11,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "secrets",
-  password: "123456",
-  port: 5432,
+  connectionString: "postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
+
 db.connect();
+
+async function dbInit() {
+  await db.query("CREATE TABLE IF NOT EXISTS userDetails (id SERIAL PRIMARY KEY, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL)");
+}
+
+await dbInit();
 
 app.get("/", (req, res) => {
   res.render("home.ejs");
@@ -32,60 +38,48 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const email = req.body.username;
+  const username = req.body.username;
   const password = req.body.password;
-
   try {
-    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-
-    if (checkResult.rows.length > 0) {
-      res.send("Email already exists. Try logging in.");
+    const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
+    if (result.rows.length > 0) {
+      res.send("User already exists");
     } else {
-      //hashing the password and saving it in the database
-      bcrypt.hash(password, saltRounds, async (err, hash) => {
+      await bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
-          console.error("Error hashing password:", err);
+          console.log(err);
         } else {
-          console.log("Hashed Password:", hash);
-          await db.query(
-            "INSERT INTO users (email, password) VALUES ($1, $2)",
-            [email, hash]
-          );
+          console.log(await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2) RETURNING password", [username, hash]));
           res.render("secrets.ejs");
         }
       });
+
     }
   } catch (err) {
     console.log(err);
   }
+
 });
 
 app.post("/login", async (req, res) => {
-  const email = req.body.username;
-  const loginPassword = req.body.password;
-
+  const username = req.body.username;
+  const password = req.body.password;
   try {
-    const result = await db.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-    if (result.rows.length > 0) {
-      const user = result.rows[0];
-      const storedHashedPassword = user.password;
-      bcrypt.compare(loginPassword, storedHashedPassword, (err, result) => {
+    const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
+    if (result.rows.length > 0 && result != undefined) {
+      bcrypt.compare(password, result.rows[0].password, (err, isMatch) => {
         if (err) {
-          console.error("Error comparing passwords:", err);
+          console.log(err);
         } else {
-          if (result) {
+          if (isMatch) {
             res.render("secrets.ejs");
           } else {
-            res.send("Incorrect Password");
+            res.send("Invalid credentials");
           }
         }
       });
     } else {
-      res.send("User not found");
+      res.send("Invalid credentials");
     }
   } catch (err) {
     console.log(err);
