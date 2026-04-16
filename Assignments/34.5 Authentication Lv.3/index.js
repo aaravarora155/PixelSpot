@@ -53,7 +53,7 @@ app.get("/logout", (req, res) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    res.redirect("./");
   });
 });
 
@@ -62,7 +62,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/secrets", (req, res) => {
-  req.isAuthenticated() ? res.render("secrets.ejs") : res.redirect("/");
+  req.isAuthenticated() ? res.render("secrets.ejs") : res.redirect("./");
 });
 
 app.get("/auth/google", passport.authenticate("google", {
