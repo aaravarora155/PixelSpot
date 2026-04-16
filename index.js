@@ -6,6 +6,3 @@ $("details").on("mouseover", function () {
 $(".close").on("mouseout", function () {
     $("details").attr("open", false);
 })
-$(".purple").on("click", function (e) {
-    alert("THIS PROJECT CONTAINS BOTH NODE.JS AND SQL FILES, CHECK THE INSTALLATION AND USAGE INSTRUCTIONS!");
-})
