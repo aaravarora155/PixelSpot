@@ -5,8 +5,9 @@ import bcrypt from "bcrypt";
 import session from "express-session";
 import passport from "passport";
 import { Strategy } from "passport-local";
+import GoogleStrategy from "passport-google-oauth2";
 
-const app = express();
+const app = express.Router();;
 const port = 3000;
 const saltRounds = 10;
 
@@ -61,6 +62,15 @@ app.get("/secrets", (req, res) => {
   req.isAuthenticated() ? res.render("secrets.ejs") : res.redirect("/");
 });
 
+app.get("/auth/google", passport.authenticate("google", {
+  scope: ["email", "profile"]
+}));
+
+app.get("/auth/google/secrets", passport.authenticate("google", {
+  successRedirect: "/secrets",
+  failureRedirect: "/login"
+}));
+
 app.post("/register", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -73,7 +83,7 @@ app.post("/register", async (req, res) => {
         if (err) {
           console.log(err);
         } else {
-          console.log(await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2)", [username, hash]));
+          console.log(await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2) RETURNING password", [username, hash]));
           res.render("secrets.ejs");
         }
       });
@@ -92,22 +102,41 @@ app.post("/login",
   })
 );
 
-passport.use(new Strategy(async function verify(username, password, cb){
-    try {
-      const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
-      if (result.rows.length > 0 && result != undefined) {
-        const user = result.rows[0];
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-          if (err) {
-            return cb(err);
+passport.use("google", new GoogleStrategy({
+  clientID: "105816395356-ln9jjkgpblend8vsj0jq0t64aakn2rlt.apps.googleusercontent.com",
+  clientSecret: "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",
+  callbackURL: "https://pixelspot.onrender.com/34.5-Authentication-Lv.3/auth/google/secrets",
+  userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+}, async (accessToken, refreshToken, profile, cb) => {
+  try {
+    const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [profile.email]);
+    if (result.rows.length == 0) {
+      const newUser = await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2) RETURNING *", [profile.email, "google"]);
+      cb(null, newUser.rows[0]);
+    } else {
+      cb(null, result.rows[0]);
+    }
+  } catch (err) {
+    cb(err);
+  }
+}));
+
+passport.use("local", new Strategy(async function verify(username, password, cb) {
+  try {
+    const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
+    if (result.rows.length > 0 && result != undefined) {
+      const user = result.rows[0];
+      bcrypt.compare(password, user.password, (err, isMatch) => {
+        if (err) {
+          return cb(err);
+        } else {
+          if (isMatch) {
+            return cb(null, user);
           } else {
-            if (isMatch) {
-              return cb(null, user);
-            } else {
-              return cb(null, false);
-            }
+            return cb(null, false);
           }
-        });
+        }
+      });
     } else {
       return cb("User not found");
     }
@@ -124,6 +153,4 @@ passport.deserializeUser((user, cb) => {
   cb(null, user);
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+export default app;

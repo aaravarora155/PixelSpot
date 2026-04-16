@@ -49,7 +49,7 @@ app.post("/register", async (req, res) => {
         if(err){
           console.log(err);
         }else{
-          console.log(await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2) RETURNING password",[username, hash]));
+          console.log(await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2)",[username, hash]));
           res.render("secrets.ejs");
         }
       });

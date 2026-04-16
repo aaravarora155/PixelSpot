@@ -24,6 +24,7 @@ const projects = [
     { path: '/30.1-DIY-API/', folder: './Assignments/30.1 DIY API/index.js' },
     { path: '/33.1-PostgreSQL/', folder: './Assignments/33.1 PostgreSQL/index.js' },
     { path: '/33.5-Family-Travel-Tracker/', folder: './Assignments/33.5 Family Travel Tracker/index.js' },
+    { path: '/34.5-Authentication-Lv.3/', folder: './Assignments/34.5 Authentication Lv.3/index.js' },
 
     { path: '/24-Secrets-Project/', folder: './Projects/Secrets Project/index.js' },
     { path: '/25-Band-Generator-Project/', folder: './Projects/Band Generator Project/index.js' },
@@ -33,6 +34,7 @@ const projects = [
     { path: '/30-Blog-API/', folder: './Projects/Blog API Project/index.js' },
     { path: '/31-Permalist-Project/', folder: './Projects/Permalist Project/index.js' },
     { path: '/32-Book-Notes-Project/', folder: './Projects/Book Notes Project/index.js' },
+    
     { path: '/contact/', folder: './Contact/contactBackend.js'}
 ];
 
