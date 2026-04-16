@@ -95,7 +95,7 @@ app.post("/add", async (req, res) => {
             );
 
             // Redirect to edit page
-            res.redirect(`/edit/${result.rows[0].id}`);
+            res.redirect(`./editPage/${result.rows[0].id}`);
         } else {
             console.log("Book not found on OpenLibrary");
             res.redirect("./"); // Consider adding error handling/flash messages in UI later
