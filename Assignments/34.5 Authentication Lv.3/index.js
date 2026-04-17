@@ -17,9 +17,13 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(express.static("public")); // Handled by monolith server.js
 app.use(session({
+  name: "auth-lv3-session",
   secret: "A5GHIuJklhgbHFHSs",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  }
 }));
 
 app.use(passport.initialize());
@@ -70,8 +74,8 @@ app.get("/auth/google", passport.authenticate("google", {
 }));
 
 app.get("/auth/google/secrets", passport.authenticate("google", {
-  successRedirect: "./secrets",
-  failureRedirect: "./login"
+  successRedirect: "/34.5-Authentication-Lv.3/secrets",
+  failureRedirect: "/34.5-Authentication-Lv.3/login"
 }));
 
 app.post("/register", async (req, res) => {
