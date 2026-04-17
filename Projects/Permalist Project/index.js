@@ -23,6 +23,16 @@ let items = [];
 
 async function dbInit() {
   await db.query("CREATE TABLE IF NOT EXISTS items(id SERIAL PRIMARY KEY, title VARCHAR(100), email VARCHAR(255))");
+  
+  // Migration: Add email column if it doesn't exist for existing tables
+  await db.query(`
+    DO $$ 
+    BEGIN 
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='items' AND column_name='email') THEN
+            ALTER TABLE items ADD COLUMN email VARCHAR(255);
+        END IF;
+    END $$;
+  `);
 }
 
 await dbInit();

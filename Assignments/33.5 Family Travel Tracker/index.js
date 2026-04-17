@@ -281,6 +281,18 @@ async function dbInit() {
   await db.query("CREATE TABLE IF NOT EXISTS countries(id SERIAL PRIMARY KEY, country_code CHAR(2) NOT NULL UNIQUE, country_name VARCHAR(50) NOT NULL)");
   await db.query("CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, name VARCHAR(15) NOT NULL, color VARCHAR(15) NOT NULL, email VARCHAR(255), UNIQUE(name, email))");
   await db.query("CREATE TABLE IF NOT EXISTS visited_countries(id SERIAL PRIMARY KEY, country_code CHAR(2) NOT NULL, user_id INTEGER REFERENCES users(id) ON DELETE CASCADE)");
+  
+  // Migration: Add email column if it doesn't exist
+  await db.query(`
+    DO $$ 
+    BEGIN 
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='email') THEN
+            ALTER TABLE users ADD COLUMN email VARCHAR(255);
+            ALTER TABLE users DROP CONSTRAINT IF EXISTS users_name_key;
+            ALTER TABLE users ADD CONSTRAINT users_name_email_key UNIQUE (name, email);
+        END IF;
+    END $$;
+  `);
 
   // Seed default users if table is empty (omitted or updated for multi-user)
   const userCountResult = await db.query("SELECT COUNT(*) FROM users");

@@ -36,6 +36,17 @@ async function initializeDB() {
                 UNIQUE(isbn, email)
             );
         `);
+        // Migration: Add email column if it doesn't exist
+        await db.query(`
+            DO $$ 
+            BEGIN 
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='books' AND column_name='email') THEN
+                    ALTER TABLE books ADD COLUMN email VARCHAR(255);
+                    ALTER TABLE books DROP CONSTRAINT IF EXISTS books_isbn_key;
+                    ALTER TABLE books ADD CONSTRAINT books_isbn_email_key UNIQUE (isbn, email);
+                END IF;
+            END $$;
+        `);
         console.log("Database initialized properly.");
     } catch (err) {
         console.error("Error creating table:", err);
