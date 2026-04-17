@@ -66,7 +66,7 @@ app.get("/secrets", (req, res) => {
 });
 
 app.get("/auth/google", passport.authenticate("google", {
-  scope: ["email", "profile"]
+  scope: ["profile", "email"]
 }));
 
 app.get("/auth/google/secrets", passport.authenticate("google", {
@@ -86,8 +86,16 @@ app.post("/register", async (req, res) => {
         if (err) {
           console.log(err);
         } else {
-          console.log(await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2) RETURNING password", [username, hash]));
-          res.render("secrets.ejs");
+          const result = await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2) RETURNING *", [username, hash]);
+          const user = result.rows[0];
+          req.login(user, (err) => {
+            if (err) {
+              console.log(err);
+              res.redirect("./login");
+            } else {
+              res.redirect("./secrets");
+            }
+          });
         }
       });
 
@@ -110,6 +118,7 @@ passport.use("google", new GoogleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: "https://pixelspot.onrender.com/34.5-Authentication-Lv.3/auth/google/secrets",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+  scope: ["profile", "email"],
 }, async (accessToken, refreshToken, profile, cb) => {
   try {
     const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [profile.email]);
