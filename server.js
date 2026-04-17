@@ -2,6 +2,8 @@ import express from 'express';
 import 'dotenv/config';
 import path from 'path';
 import fs from 'fs';
+import session from 'express-session';
+import passport from 'passport';
 import { fileURLToPath, pathToFileURL } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,8 +16,43 @@ app.set('strict routing', false);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('Hosting', { extensions: ['html'] }));
-app.use(express.static(__dirname)); // Serve root assets (master.css, index.js, etc.)
+
+// --- AUTHENTICATION SETUP ---
+app.use(session({
+    name: "auth-lv3-session",
+    secret: process.env.SESSION_SECRET || "A5GHIuJklhgbHFHSs",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 // 1 day
+    }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// --- GLOBAL AUTHENTICATION FILTER ---
+app.use((req, res, next) => {
+    const publicPaths = [
+        '/Login',
+        '/Register',
+        '/master.css',
+        '/Images',
+        '/login',
+        '/register',
+        '/auth/google',
+        '/favicon.ico'
+    ];
+
+    const isPublic = publicPaths.some(p => req.url.startsWith(p)) || req.url === '/';
+    
+    if (isPublic || req.isAuthenticated()) {
+        return next();
+    }
+    
+    console.log(`🔒 Protecting path: ${req.url}`);
+    res.redirect('/Login/index.html');
+});
 
 const projects = [
     { path: '/28.1-JSON/', folder: './Assignments/28.1 JSON/index.js' },
@@ -146,6 +183,10 @@ async function loadProjects() {
 }
 
 await loadProjects();
+
+// Move static serving AFTER auth check and projects
+app.use(express.static('Hosting', { extensions: ['html'] }));
+app.use(express.static(__dirname)); 
 
 // --- 3. HUB HOME & ERROR HANDLING ---
 app.get('/', (req, res) => {

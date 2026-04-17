@@ -16,18 +16,7 @@ const saltRounds = 10;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(express.static("public")); // Handled by monolith server.js
-app.use(session({
-  name: "auth-lv3-session",
-  secret: "A5GHIuJklhgbHFHSs",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 // 1 day
-  }
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
+// Middleware handled by monolith server.js
 
 const db = new pg.Client({
   connectionString: process.env.PG_CONNECTION_STRING,
@@ -99,7 +88,7 @@ app.post("/login",
   })
 );
 
-app.get("/logout", (req, res) => {
+app.get("/logout", (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
