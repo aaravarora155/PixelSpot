@@ -2,15 +2,18 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import axios from "axios";
+import env from "dotenv";
+
+env.config();
 
 const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  connectionString:process.env.PG_CONNECTION_STRING || "postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
-  ssl:{
-    rejectUnauthorized: false
-  }
+    connectionString: process.env.DATABASE_URL_1,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 db.connect();
 
@@ -23,12 +26,14 @@ async function initializeDB() {
         await db.query(`
             CREATE TABLE IF NOT EXISTS books (
                 id SERIAL PRIMARY KEY,
-                isbn VARCHAR(20) UNIQUE,
+                isbn VARCHAR(20),
                 title VARCHAR(255) NOT NULL,
                 author VARCHAR(255),
                 rating INTEGER DEFAULT 1 CHECK (rating >= 1 AND rating <= 5),
                 notes TEXT,
-                date_read DATE DEFAULT CURRENT_DATE
+                date_read DATE DEFAULT CURRENT_DATE,
+                email VARCHAR(255),
+                UNIQUE(isbn, email)
             );
         `);
         console.log("Database initialized properly.");
@@ -40,7 +45,7 @@ initializeDB();
 
 let currentSort = "recency";
 
-async function getBooks() {
+async function getBooks(email) {
     let orderClause = "ORDER BY date_read DESC";
     if (currentSort === "rating") {
         orderClause = "ORDER BY rating DESC";
@@ -48,13 +53,14 @@ async function getBooks() {
         orderClause = "ORDER BY title ASC";
     }
 
-    const result = await db.query(`SELECT id, isbn, title, author, rating, notes, date_read AS "dateRead" FROM books ${orderClause}`);
+    const result = await db.query(`SELECT id, isbn, title, author, rating, notes, date_read AS "dateRead" FROM books WHERE email = $1 ${orderClause}`, [email]);
     return result.rows;
 }
 
 app.get("/", async (req, res) => {
     try {
-        const books = await getBooks();
+        const email = req.user ? req.user.username : null;
+        const books = await getBooks(email);
         res.render("index.ejs", { books, currentSort });
     } catch (err) {
         console.log(err);
@@ -72,9 +78,10 @@ app.get("/sort/:sort", (req, res) => {
 
 app.post("/add", async (req, res) => {
     const isbn = req.body.isbn;
+    const email = req.user ? req.user.username : null;
     try {
-        // Check if book already exists
-        const checkResult = await db.query("SELECT * FROM books WHERE isbn = $1", [isbn]);
+        // Check if book already exists for THIS user
+        const checkResult = await db.query("SELECT * FROM books WHERE isbn = $1 AND email = $2", [isbn, email]);
         if (checkResult.rows.length > 0) {
             // Already added
             return res.redirect(req.baseUrl);
@@ -90,8 +97,8 @@ app.post("/add", async (req, res) => {
 
             // Insert book entry
             const result = await db.query(
-                "INSERT INTO books (isbn, title, author, rating, notes) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-                [isbn, title, author, 1, "Enter your notes here..."]
+                "INSERT INTO books (isbn, title, author, rating, notes, email) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+                [isbn, title, author, 1, "Enter your notes here...", email]
             );
 
             // Redirect to edit page
@@ -108,8 +115,9 @@ app.post("/add", async (req, res) => {
 
 app.get("/editPage/:id", async (req, res) => {
     const id = req.params.id;
+    const email = req.user ? req.user.username : null;
     try {
-        const result = await db.query("SELECT id, isbn, title, author, rating, notes, date_read AS \"dateRead\" FROM books WHERE id = $1", [id]);
+        const result = await db.query("SELECT id, isbn, title, author, rating, notes, date_read AS \"dateRead\" FROM books WHERE id = $1 AND email = $2", [id, email]);
         if (result.rows.length > 0) {
             res.render("edit.ejs", { book: result.rows[0] });
         } else {
@@ -123,11 +131,12 @@ app.get("/editPage/:id", async (req, res) => {
 
 app.post("/edit/:id", async (req, res) => {
     const id = req.params.id;
+    const email = req.user ? req.user.username : null;
     const { rating, notes, dateRead } = req.body;
     try {
         await db.query(
-            "UPDATE books SET rating = $1, notes = $2, date_read = $3 WHERE id = $4",
-            [rating, notes, dateRead, id]
+            "UPDATE books SET rating = $1, notes = $2, date_read = $3 WHERE id = $4 AND email = $5",
+            [rating, notes, dateRead, id, email]
         );
         res.redirect(req.baseUrl);
     } catch (err) {
@@ -138,8 +147,9 @@ app.post("/edit/:id", async (req, res) => {
 
 app.get("/view/:id", async (req, res) => {
     const id = req.params.id;
+    const email = req.user ? req.user.username : null;
     try {
-        const result = await db.query("SELECT id, isbn, title, author, rating, notes, date_read AS \"dateRead\" FROM books WHERE id = $1", [id]);
+        const result = await db.query("SELECT id, isbn, title, author, rating, notes, date_read AS \"dateRead\" FROM books WHERE id = $1 AND email = $2", [id, email]);
         if (result.rows.length > 0) {
             res.render("view.ejs", { book: result.rows[0] });
         } else {
@@ -153,8 +163,9 @@ app.get("/view/:id", async (req, res) => {
 
 app.post("/delete/:id", async (req, res) => {
     const id = req.params.id;
+    const email = req.user ? req.user.username : null;
     try {
-        await db.query("DELETE FROM books WHERE id = $1", [id]);
+        await db.query("DELETE FROM books WHERE id = $1 AND email = $2", [id, email]);
         res.redirect(req.baseUrl);
     } catch (err) {
         console.log(err);

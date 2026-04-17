@@ -1,13 +1,16 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
+import env from "dotenv";
+
+env.config();
 
 const app = express.Router();
 const port = 3000;
 
 const db = new pg.Client({
-  connectionString:process.env.PG_CONNECTION_STRING || "postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
-  ssl:{
+  connectionString: process.env.DATABASE_URL_1,
+  ssl: {
     rejectUnauthorized: false
   }
 });
@@ -18,7 +21,7 @@ db.connect();
 
 let items = [];
 
-async function dbInit(){
+async function dbInit() {
   await db.query("CREATE TABLE IF NOT EXISTS items(id SERIAL PRIMARY KEY, title VARCHAR(100))");
 }
 

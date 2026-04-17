@@ -5,6 +5,9 @@ import bcrypt from "bcrypt";
 import session from "express-session";
 import passport from "passport";
 import { Strategy } from "passport-local";
+import env from "dotenv";
+
+env.config();
 
 const app = express();
 const port = 3000;
@@ -22,7 +25,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const db = new pg.Client({
-  connectionString: "postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
+  connectionString: process.env.DATABASE_URL_1,
   ssl: {
     rejectUnauthorized: false
   }
@@ -92,22 +95,22 @@ app.post("/login",
   })
 );
 
-passport.use(new Strategy(async function verify(username, password, cb){
-    try {
-      const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
-      if (result.rows.length > 0 && result != undefined) {
-        const user = result.rows[0];
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-          if (err) {
-            return cb(err);
+passport.use(new Strategy(async function verify(username, password, cb) {
+  try {
+    const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
+    if (result.rows.length > 0 && result != undefined) {
+      const user = result.rows[0];
+      bcrypt.compare(password, user.password, (err, isMatch) => {
+        if (err) {
+          return cb(err);
+        } else {
+          if (isMatch) {
+            return cb(null, user);
           } else {
-            if (isMatch) {
-              return cb(null, user);
-            } else {
-              return cb(null, false);
-            }
+            return cb(null, false);
           }
-        });
+        }
+      });
     } else {
       return cb("User not found");
     }

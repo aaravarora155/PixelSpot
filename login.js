@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Middleware handled by monolith server.js
 
 const db = new pg.Client({
-  connectionString: process.env.PG_CONNECTION_STRING,
+  connectionString: process.env.DATABASE_URL_1,
   ssl: {
     rejectUnauthorized: false
   }

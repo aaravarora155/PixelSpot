@@ -2,6 +2,9 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
+import env from "dotenv";
+
+env.config();
 
 const app = express();
 const port = 3000;
@@ -11,8 +14,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 const db = new pg.Client({
-  connectionString:"postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
-  ssl:{
+  connectionString: process.env.DATABASE_URL_1,
+  ssl: {
     rejectUnauthorized: false
   }
 });
@@ -40,22 +43,22 @@ app.get("/register", (req, res) => {
 app.post("/register", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  try{
+  try {
     const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
-    if(result.rows.length > 0){
+    if (result.rows.length > 0) {
       res.send("User already exists");
-    }else{
+    } else {
       await bcrypt.hash(password, saltRounds, async (err, hash) => {
-        if(err){
+        if (err) {
           console.log(err);
-        }else{
-          console.log(await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2)",[username, hash]));
+        } else {
+          console.log(await db.query("INSERT INTO userDetails(username, password) VALUES ($1, $2)", [username, hash]));
           res.render("secrets.ejs");
         }
       });
 
-    }     
-  }catch(err){
+    }
+  } catch (err) {
     console.log(err);
   }
 
@@ -64,24 +67,24 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  try{
+  try {
     const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
-    if(result.rows.length > 0 && result != undefined){
+    if (result.rows.length > 0 && result != undefined) {
       bcrypt.compare(password, result.rows[0].password, (err, isMatch) => {
-        if(err){
+        if (err) {
           console.log(err);
-        }else{
-          if(isMatch){
+        } else {
+          if (isMatch) {
             res.render("secrets.ejs");
-          }else{
+          } else {
             res.send("Invalid credentials");
           }
         }
       });
-    }else{
+    } else {
       res.send("Invalid credentials");
-  }
-  }catch(err){
+    }
+  } catch (err) {
     console.log(err);
   }
 });
