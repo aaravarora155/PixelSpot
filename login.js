@@ -34,11 +34,11 @@ async function dbInit() {
 await dbInit();
 
 app.get("/", (req, res) => {
-  res.redirect("/Login/index.html");
+  res.redirect("/Login");
 });
 
 app.get("/home", (req, res) => {
-  req.isAuthenticated() ? res.redirect("/Home/index.html") : res.redirect("/Login/index.html");
+  req.isAuthenticated() ? res.redirect("/Home") : res.redirect("/Login");
 });
 
 app.get("/auth/google", passport.authenticate("google", {
@@ -46,8 +46,8 @@ app.get("/auth/google", passport.authenticate("google", {
 }));
 
 app.get("/auth/google/home", passport.authenticate("google", {
-  successRedirect: "/Home/index.html",
-  failureRedirect: "/Login/index.html"
+  successRedirect: "/Home",
+  failureRedirect: "/Login"
 }));
 
 app.post("/register", async (req, res) => {
@@ -67,9 +67,9 @@ app.post("/register", async (req, res) => {
           req.login(user, (err) => {
             if (err) {
               console.log(err);
-              res.redirect("/Login/index.html");
+              res.redirect("/Login");
             } else {
-              res.redirect("/Home/index.html");
+              res.redirect("/Home");
             }
           });
         }
@@ -83,8 +83,8 @@ app.post("/register", async (req, res) => {
 
 app.post("/login",
   passport.authenticate("local", {
-    successRedirect: "/Home/index.html",
-    failureRedirect: "/Login/index.html"
+    successRedirect: "/Home",
+    failureRedirect: "/Login"
   })
 );
 
@@ -93,7 +93,7 @@ app.get("/logout", (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/Login/index.html");
+    res.redirect("/Login");
   });
 });
 

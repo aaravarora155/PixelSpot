@@ -51,7 +51,7 @@ app.use((req, res, next) => {
     }
     
     console.log(`🔒 Protecting path: ${req.url}`);
-    res.redirect('/Login/index.html');
+    res.redirect('/Login');
 });
 
 const projects = [
