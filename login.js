@@ -99,6 +99,15 @@ app.post("/login",
   })
 );
 
+app.get("/logout", (req, res) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/Login/index.html");
+  });
+});
+
 passport.use("google", new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID_MAIN,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET_MAIN,
