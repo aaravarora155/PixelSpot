@@ -102,7 +102,7 @@ app.post("/login",
 passport.use("google", new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID_MAIN,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET_MAIN,
-  callbackURL: "https://pixelspot.onrender.com/login/auth/google/home",
+  callbackURL: "https://pixelspot.onrender.com/auth/google/home",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
   scope: ["profile", "email"],
 }, async (accessToken, refreshToken, profile, cb) => {
