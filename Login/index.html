@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | PixelSpot</title>
+    <link rel="stylesheet" href="../../Hosting/master.css" />
+    <script src="https://kit.fontawesome.com/9b88aea352.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="/Images/Home Button.png">
+</head>
+<body>
+    <div class="top-nav">
+        <a class="home-icon" href="/Home"><i class="fa-regular fa-house"></i></a>
+        <h1 id="title">Login</h1>
+    </div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2 class="login-title">Welcome Back</h2>
+            
+            <!-- Standard Login Form -->
+            <form action="/login" method="POST" class="login-form">
+                <div class="login-input-group">
+                    <label class="login-label" for="email">Email</label>
+                    <input class="login-input" type="email" id="email" name="username" placeholder="Enter your email" required />
+                </div>
+                <div class="login-input-group">
+                    <label class="login-label" for="password">Password</label>
+                    <input class="login-input" type="password" id="password" name="password" placeholder="Enter your password" required />
+                </div>
+                <button type="submit" class="login-submit">Sign In</button>
+            </form>
+
+            <div class="divider">OR</div>
+
+            <!-- Google OAuth Login -->
+            <a href="/auth/google" class="google-btn">
+                <i class="fa-brands fa-google"></i>
+                Continue with Google
+            </a>
+
+            <p style="margin-top: 25px; color: rgba(255, 255, 255, 0.7); font-size: 14px;">
+                Don't have an account? <a href="/register" style="color: white; font-weight: 600; text-decoration: none;">Register</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

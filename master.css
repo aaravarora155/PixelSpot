@@ -156,7 +156,7 @@ details ul li:hover{
   height: 80px;
   padding:20px;
 }
-i{
+i:not(.fa-brands):not(.fa-google):not(.home-icon i){
     color:white;
     font-size: 30px;
     position:absolute;
@@ -530,71 +530,169 @@ a {
   }
 }
 
-/* --- Login & OAuth Styles --- */
-
-.google-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* --- Login Page Styles --- */
+.top-nav {
+  position: relative;
+  height: 60px;
   width: 100%;
-  padding: 14px;
-  background-color: white;
-  color: #757575;
-  border: 1px solid #ddd;
+}
+
+.home-icon {
+  float: right;
+  margin-right: 30px;
+  margin-top: 20px;
+  text-decoration: none;
+}
+
+.home-icon i {
+  position: static !important;
+  font-size: 30px;
+  color: white;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: calc(100vh - 150px);
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.login-title {
+  color: white !important;
+  margin-top: 0;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.login-form {
+  margin-bottom: 20px;
+}
+
+.login-input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.login-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.login-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid transparent;
   border-radius: 12px;
   font-size: 16px;
-  font-weight: 500;
-  text-decoration: none;
+  font-family: inherit;
+  color: #333;
   transition: all 0.3s ease;
-  margin-top: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  outline: none;
 }
 
-.google-btn:hover {
-  background-color: #f8f8f8;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  transform: translateY(-1px);
+.login-input:focus {
+  background: #fff;
+  border-color: #4b51f1;
+  box-shadow: 0 0 0 4px rgba(75, 81, 241, 0.2);
 }
 
-.google-btn i {
-  color: #4285F4; /* Google Blue */
-  margin-right: 12px;
-  font-size: 20px;
-  position: static; /* Reset from general i rule */
+.login-submit {
+  width: 100% !important;
+  padding: 16px !important;
+  background: linear-gradient(135deg, #4b51f1, #009dff) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 10px;
 }
 
-.login-divider {
+.login-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(75, 81, 241, 0.4);
+}
+
+.divider {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 30px 0;
+  margin: 25px 0;
   color: rgba(255, 255, 255, 0.6);
 }
 
-.login-divider::before,
-.login-divider::after {
+.divider::before,
+.divider::after {
   content: '';
   flex: 1;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.login-divider:not(:empty)::before {
+.divider:not(:empty)::before {
   margin-right: .5em;
 }
 
-.login-divider:not(:empty)::after {
+.divider:not(:empty)::after {
   margin-left: .5em;
 }
 
-.login-footer {
-  margin-top: 25px;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
+.google-btn {
+  width: 100%;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px;
+  background: white !important;
+  color: #444 !important;
+  border-radius: 12px !important;
+  border: none !important;
+  padding: 14px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none !important;
 }
 
-.login-footer a {
-  color: white;
-  text-decoration: underline;
-  font-weight: 600;
+.google-btn:hover {
+  background: #f1f1f1 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.google-btn i {
+  color: #4285F4 !important; /* Google Blue */
+  font-size: 20px !important;
+  position: static !important; /* Reset absolute pos from generic i selector */
+  margin: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+  }
 }
