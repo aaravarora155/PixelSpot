@@ -49,9 +49,10 @@ details ul {
     background: rgba(75, 80, 241, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 15px;
-    padding: 10px 0;
+    padding: 0; /* Changed to 0 to let li control padding */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden; /* Fixes corner rounding issues on hover */
 }
 
 details ul li {
@@ -225,6 +226,66 @@ i.fa-regular.fa-house, i.fa-house-user {
 .contact-submit:hover, .login-submit:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(228, 64, 64, 0.4);
+}
+
+.login-label {
+    display: block;
+    color: white;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 30px 0;
+    font-size: 14px;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.divider:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: .5em;
+}
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px;
+    background: white;
+    color: #444;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.google-btn:hover {
+    background: #f8f8f8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.google-btn i {
+    font-size: 20px;
+    color: #4285F4;
 }
 
 /* --- Iframes --- */
