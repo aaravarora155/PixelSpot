@@ -620,16 +620,17 @@ a {
 
 .login-submit {
   width: 100% !important;
-  padding: 16px !important;
+  padding: 14px 18px !important;
   background: linear-gradient(135deg, #4b51f1, #009dff) !important;
   color: white !important;
   border: none !important;
   border-radius: 12px !important;
-  font-size: 18px !important;
+  font-size: 16px !important;
   font-weight: 600 !important;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   margin-top: 10px;
+  box-sizing: border-box !important;
 }
 
 .login-submit:hover {
@@ -661,7 +662,7 @@ a {
 }
 
 .google-btn {
-  width: 100%;
+  width: 100% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -670,12 +671,13 @@ a {
   color: #444 !important;
   border-radius: 12px !important;
   border: none !important;
-  padding: 14px !important;
+  padding: 14px 18px !important;
   font-size: 16px !important;
   font-weight: 600 !important;
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none !important;
+  box-sizing: border-box !important;
 }
 
 .google-btn:hover {
