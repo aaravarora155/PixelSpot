@@ -15,7 +15,7 @@ const port = 3000;
 const saltRounds = 10;
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+// app.use(express.static("public")); // Handled by monolith server.js
 app.use(session({
   secret: "A5GHIuJklhgbHFHSs",
   resave: false,
@@ -26,7 +26,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const db = new pg.Client({
-  connectionString: "postgresql://main:ZJPFb7FKnVL5JsK13DuavZc54VBeoyF1@dpg-d7fv57reo5us73b9hdo0-a.oregon-postgres.render.com/webdev_vsyb",
+  connectionString: process.env.PG_CONNECTION_STRING,
   ssl: {
     rejectUnauthorized: false
   }
@@ -70,8 +70,8 @@ app.get("/auth/google", passport.authenticate("google", {
 }));
 
 app.get("/auth/google/secrets", passport.authenticate("google", {
-  successRedirect: "/secrets",
-  failureRedirect: "/login"
+  successRedirect: "./secrets",
+  failureRedirect: "./login"
 }));
 
 app.post("/register", async (req, res) => {
@@ -100,15 +100,15 @@ app.post("/register", async (req, res) => {
 
 app.post("/login",
   passport.authenticate("local", {
-    successRedirect: "/secrets",
-    failureRedirect: "/login"
+    successRedirect: "./secrets",
+    failureRedirect: "./login"
   })
 );
 
 passport.use("google", new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.GOOGLE_CALLBACK_URL,
+  callbackURL: "https://pixelspot.onrender.com/34.5-Authentication-Lv.3/auth/google/secrets",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
 }, async (accessToken, refreshToken, profile, cb) => {
   try {
