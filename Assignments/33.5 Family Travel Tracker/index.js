@@ -8,13 +8,17 @@ env.config();
 const app = express.Router();
 const port = 3000;
 
-const db = new pg.Client({
+const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL_1,
   ssl: {
     rejectUnauthorized: false
   }
 });
-db.connect();
+
+// Catch unexpected connection errors
+db.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
