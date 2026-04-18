@@ -59,7 +59,7 @@ app.post("/register", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM masterUsers WHERE username = $1", [username]);
     if (result.rows.length > 0) {
-      res.send("User already exists");
+      res.redirect("/Register?error=exists");
     } else {
       await bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
@@ -72,6 +72,7 @@ app.post("/register", async (req, res) => {
               console.log(err);
               res.redirect("/Login");
             } else {
+              req.session.cookie.maxAge = 1000 * 60 * 60 * 24; // 1 day
               res.redirect("/Home");
             }
           });
@@ -84,19 +85,29 @@ app.post("/register", async (req, res) => {
 
 });
 
-app.post("/login",
-  passport.authenticate("local", {
-    successRedirect: "/Home",
-    failureRedirect: "/Login"
-  })
-);
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      const msg = info && info.message ? info.message : "invalid";
+      return res.redirect("/Login?error=" + encodeURIComponent(msg));
+    }
+    req.login(user, (err) => {
+      if (err) return next(err);
+      req.session.cookie.maxAge = 1000 * 60 * 60 * 24; // 1 day
+      return res.redirect("/Home");
+    });
+  })(req, res, next);
+});
 
 app.get("/logout", (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
     }
-    res.redirect("/Login");
+    req.session.destroy(() => {
+      res.redirect("/Login");
+    });
   });
 });
 
@@ -115,6 +126,7 @@ passport.use("google", new GoogleStrategy({
     } else {
       cb(null, result.rows[0]);
     }
+    // Cookie maxAge is set globally in server.js (1 day)
   } catch (err) {
     cb(err);
   }
@@ -132,14 +144,15 @@ passport.use("local", new Strategy(async function verify(username, password, cb)
           if (isMatch) {
             return cb(null, user);
           } else {
-            return cb(null, false);
+            return cb(null, false, { message: "wrongPassword" }); // triggers ?error=wrongPassword
           }
         }
       });
     } else {
-      return cb("User not found");
+      return cb(null, false, { message: "notFound" }); // triggers ?error=notFound
     }
   } catch (err) {
+    console.error("Authentication error:", err);
     return cb(err);
   }
 }));

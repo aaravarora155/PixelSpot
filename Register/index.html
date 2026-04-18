@@ -38,5 +38,10 @@
             </p>
         </div>
     </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get('error');
+        if (error === 'exists') alert('An account with that email already exists. Please log in instead.');
+    </script>
 </body>
 </html>

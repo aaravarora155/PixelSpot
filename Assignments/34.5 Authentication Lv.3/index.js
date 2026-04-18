@@ -2,7 +2,6 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
-import session from "express-session";
 import passport from "passport";
 import { Strategy } from "passport-local";
 import GoogleStrategy from "passport-google-oauth2";
@@ -16,18 +15,7 @@ const saltRounds = 10;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(express.static("public")); // Handled by monolith server.js
-app.use(session({
-  name: "auth-lv3-session",
-  secret: "A5GHIuJklhgbHFHSs",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 // 1 day
-  }
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
+// Session, passport.initialize(), and passport.session() are handled globally by server.js
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL_1,
@@ -60,7 +48,9 @@ app.get("/logout", (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/34.5-Authentication-Lv.3/");
+    req.session.destroy(() => {
+      res.redirect("/Login");
+    });
   });
 });
 

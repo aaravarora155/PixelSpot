@@ -38,5 +38,12 @@
             </p>
         </div>
     </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get('error');
+        if (error === 'wrongPassword') alert('Incorrect password. Please try again.');
+        else if (error === 'notFound') alert('No account found with that email.');
+        else if (error === 'invalid') alert('Login failed. Please check your credentials.');
+    </script>
 </body>
 </html>
