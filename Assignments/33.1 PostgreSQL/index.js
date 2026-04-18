@@ -9,11 +9,16 @@ env.config();
 const app = express.Router();
 const port = 3000;
 
-const db = new pg.Client({
+const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL_1,
   ssl: {
     rejectUnauthorized: false
   }
+});
+
+// Catch unexpected idle connection errors (prevents server crash)
+db.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
 });
 
 const countries = [
@@ -103,7 +108,7 @@ const countries = [
   [247, "Zimbabwe", "Harare"]
 ];
 
-db.connect();
+// db.connect() not needed for Pool — it manages connections automatically
 
 async function dbInit() {
   await db.query("DROP TABLE IF EXISTS capitals");

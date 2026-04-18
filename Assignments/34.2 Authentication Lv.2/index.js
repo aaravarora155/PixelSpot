@@ -13,14 +13,17 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const db = new pg.Client({
+const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL_1,
   ssl: {
     rejectUnauthorized: false
   }
 });
 
-db.connect();
+// Catch unexpected idle connection errors (prevents server crash)
+db.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+});
 
 async function dbInit() {
   await db.query("CREATE TABLE IF NOT EXISTS userDetails (id SERIAL PRIMARY KEY, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL)");
