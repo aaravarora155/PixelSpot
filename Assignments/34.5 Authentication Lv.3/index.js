@@ -55,12 +55,12 @@ app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
-app.get("/logout", (req, res) => {
+app.get("/logout", (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
     }
-    res.redirect("./");
+    res.redirect("/34.5-Authentication-Lv.3/");
   });
 });
 
@@ -72,11 +72,11 @@ app.get("/secrets", (req, res) => {
   req.isAuthenticated() ? res.render("secrets.ejs") : res.redirect("./");
 });
 
-app.get("/auth/google", passport.authenticate("google", {
+app.get("/auth/google", passport.authenticate("google-lv3", {
   scope: ["profile", "email"]
 }));
 
-app.get("/auth/google/secrets", passport.authenticate("google", {
+app.get("/auth/google/secrets", passport.authenticate("google-lv3", {
   successRedirect: "/34.5-Authentication-Lv.3/secrets",
   failureRedirect: "/34.5-Authentication-Lv.3/login"
 }));
@@ -114,13 +114,13 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login",
-  passport.authenticate("local", {
+  passport.authenticate("local-lv3", {
     successRedirect: "./secrets",
     failureRedirect: "./login"
   })
 );
 
-passport.use("google", new GoogleStrategy({
+passport.use("google-lv3", new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: "https://pixelspot.onrender.com/34.5-Authentication-Lv.3/auth/google/secrets",
@@ -140,7 +140,7 @@ passport.use("google", new GoogleStrategy({
   }
 }));
 
-passport.use("local", new Strategy(async function verify(username, password, cb) {
+passport.use("local-lv3", new Strategy(async function verify(username, password, cb) {
   try {
     const result = await db.query("SELECT * FROM userDetails WHERE username = $1", [username]);
     if (result.rows.length > 0 && result != undefined) {
