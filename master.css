@@ -366,6 +366,9 @@ iframe {
         padding: 20px !important;
         box-sizing: border-box;
     }
+    #ins h3 p a {
+        color:white;
+    }
 
     .Download-Node table {
         display: block;

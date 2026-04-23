@@ -1,33 +1,57 @@
-import React from "react";
-import notes from "../notes";
-
-function submitNote(event, props) {
-  event.preventDefault();
-  const title = event.target.title.value;
-  const content = event.target.content.value;
-
-  notes.push({ id: notes.length + 1, title: title, content: content });
-
-  document.getElementById("title").value = "";
-  document.getElementById("content").value = "";
-  console.log(notes);
-}
-
-function getClick(){
-  return document.getElementById("add")
-}
+import React, { useState } from "react";
 
 function CreateArea(props) {
+  // 1. Use state to track the input values
+  const [note, setNote] = useState({
+    title: "",
+    content: ""
+  });
+
+  // 2. Update state whenever the user types
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    setNote(prevNote => {
+      return {
+        ...prevNote,
+        [name]: value
+      };
+    });
+  }
+
+  function submitNote(event) {
+    // 3. Send the note back to the App component using the prop
+    props.onAdd(note);
+    
+    // 4. Clear the input fields after adding
+    setNote({
+      title: "",
+      content: ""
+    });
+    
+    event.preventDefault();
+  }
+
   return (
     <div>
       <form>
-        <input id="title" name="title" placeholder="Title" />
-        <textarea id="content" name="content" placeholder="Take a note..." rows="3" />
-        <button onClick={(event) => submitNote(event, props)} type="submit" id="add">Add</button>
+        <input
+          name="title"
+          onChange={handleChange}
+          value={note.title}
+          placeholder="Title"
+        />
+        <textarea
+          name="content"
+          onChange={handleChange}
+          value={note.content}
+          placeholder="Take a note..."
+          rows="3"
+        />
+        <button onClick={submitNote}>Add</button>
       </form>
     </div>
   );
 }
 
 export default CreateArea;
-export {getClick};
