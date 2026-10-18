@@ -47,11 +47,11 @@ app.use((req, res, next) => {
     ];
 
     const isPublic = publicPaths.some(p => req.url.startsWith(p)) || req.url === '/';
-    
+
     if (isPublic || req.isAuthenticated()) {
         return next();
     }
-    
+
     console.log(`🔒 Protecting path: ${req.url}`);
     res.redirect('/Login');
 });
@@ -75,10 +75,8 @@ const projects = [
     { path: '/31-Permalist-Project/', folder: './Projects/Permalist Project/index.js' },
     { path: '/32-Book-Notes-Project/', folder: './Projects/Book Notes Project/index.js' },
 
-    { path: '/frc-interpreter/', folder: './FRC Game Manual Interpreter/server.js'},
-    
-    { path: '/contact/', folder: './Contact/contactBackend.js'},
-    { path: '/', folder: './login.js'}
+    { path: '/contact/', folder: './Contact/contactBackend.js' },
+    { path: '/', folder: './login.js' }
 ];
 
 // --- 1. THE STRAY REQUEST FIXER ---
@@ -96,7 +94,7 @@ app.use((req, res, next) => {
                 const rPath = refUrl.pathname.endsWith('/') ? refUrl.pathname : refUrl.pathname + '/';
                 return rPath.startsWith(pPath);
             });
-            
+
             if (project && req.url === '/') {
                 // If we hit root but came from a project, go back to project root
                 console.log(`🏠 Fixing stray root request from ${project.path}`);
@@ -106,13 +104,13 @@ app.use((req, res, next) => {
             if (project && !req.url.startsWith(project.path) && !req.url.startsWith(project.path.slice(0, -1))) {
                 // Fix absolute paths (e.g. /css/style.css -> /project/css/style.css)
                 const newPath = path.posix.join(project.path, req.url);
-                
+
                 // If it's a page request (no dot), redirect so browser URL is fixed
                 if (!req.url.includes('.')) {
                     console.log(`🚀 Redirecting to fixed path: ${newPath}`);
                     return res.redirect(307, newPath);
                 }
-                
+
                 // If it's an asset, internal rewrite is fine
                 req.url = newPath;
             }
@@ -129,10 +127,10 @@ app.use((req, res, next) => {
             const absolutePath = path.resolve(__dirname, project.folder);
             const projectDir = path.dirname(absolutePath);
             const searchFolders = [projectDir, path.join(projectDir, 'public')];
-            
+
             let relPath = req.url.substring(project.path.length); // e.g. "submit/css/style.css"
             let segments = relPath.split('/');
-            
+
             while (segments.length > 0) {
                 const testPath = segments.join('/');
                 for (const folder of searchFolders) {
@@ -167,15 +165,15 @@ async function loadProjects() {
                 app.use(project.path, (req, res, next) => {
                     // SANDBOX EJS: Force the lookup to the sub-folder
                     const _render = res.render;
-                    res.render = function(view, options, fn) {
+                    res.render = function (view, options, fn) {
                         const viewPath = path.join(projectDir, 'views', view.endsWith('.ejs') ? view : view + '.ejs');
                         return _render.call(this, viewPath, options, fn);
                     };
-                    
+
                     // NORMALIZE PATH: Strip prefix for the sub-router
                     const originalUrl = req.url;
                     req.url = (req.url === '' || req.url === '/') ? '/' : req.url;
-                    
+
                     router(req, res, (err) => {
                         req.url = originalUrl;
                         next(err);
@@ -190,7 +188,7 @@ await loadProjects();
 
 // Move static serving AFTER auth check and projects
 app.use(express.static('Hosting', { extensions: ['html'] }));
-app.use(express.static(__dirname)); 
+app.use(express.static(__dirname));
 
 // --- 3. HUB HOME & ERROR HANDLING ---
 app.get('/', (req, res) => {

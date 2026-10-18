@@ -436,3 +436,180 @@ iframe {
   color: white;
   font-size: 1rem;
 }
+
+/* --- New Additions Showcase Styles --- */
+.new-additions-hero {
+    text-align: center;
+    padding: 10px 20px 30px 20px;
+    color: white;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.new-additions-subtitle {
+    font-size: 1.15rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 25px 60px 25px;
+    box-sizing: border-box;
+}
+
+.project-card {
+    background: linear-gradient(135deg, rgba(75, 81, 241, 0.25) 0%, rgba(228, 64, 64, 0.25) 100%), rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 24px;
+    padding: 35px 30px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+/* Signature top gradient accent bar */
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(to right, #4b51f1, #e44040);
+    transition: height 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 20px 45px rgba(75, 81, 241, 0.4), 0 10px 30px rgba(228, 64, 64, 0.35);
+}
+
+.project-card:hover::before {
+    height: 8px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #4b51f1, #e44040);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover .card-icon {
+    transform: scale(1.08) rotate(3deg);
+}
+
+.card-badge {
+    background: linear-gradient(135deg, #4b51f1, #e44040);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(228, 64, 64, 0.3);
+}
+
+.project-title {
+    color: white;
+    font-size: 1.85rem;
+    margin: 0 0 15px 0;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.project-description {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    line-height: 1.65;
+    margin: 0 0 25px 0;
+    flex-grow: 1;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.project-tag {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    font-size: 0.8rem;
+    padding: 5px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s ease;
+}
+
+.project-tag:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.project-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #ff6b6b, #e44040);
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(228, 64, 64, 0.35);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.project-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(228, 64, 64, 0.5);
+    color: white;
+}
+
+@media screen and (max-width: 600px) {
+    .cards-container {
+        grid-template-columns: 1fr;
+        padding: 10px 15px 40px 15px;
+    }
+
+    .project-card {
+        padding: 25px 20px;
+    }
+}
